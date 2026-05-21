@@ -1,37 +1,69 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.database import engine, Base
+from app.config.database import engine, Base
 
-from app.models import user, dataset
+from app.models.user import User
+from app.models.dataset import Dataset
+from app.models.sales_record import SalesRecord
+from app.models.forecast_history import ForecastHistory
+from app.models.notification import Notification
 
-from app.routers import (
-    auth,
-    dataset as dataset_router,
-    forecast
+from app.routers.auth import router as auth_router
+
+from app.routers.dataset import (
+    router as dataset_router
 )
 
-from app.routers import report
+from app.routers.forecast import (
+    router as forecast_router
+)
+
+from app.routers.dashboard_routes import (
+    router as dashboard_router
+)
+
+from app.routers.notification_routes import (
+    router as notification_router
+)
+
+from app.routers.admin_routes import (
+    router as admin_router
+)
+
+from app.routers.report import  (
+    router as report_router
+)
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(title="Advanced AI Demand Forecasting")
+
 app.add_middleware(
+
     CORSMiddleware,
-    allow_origins=["*"],
+
+    allow_origins=[
+        "http://localhost:5173"
+    ],
+
     allow_credentials=True,
+
     allow_methods=["*"],
+
     allow_headers=["*"],
 )
 
-app.include_router(auth.router)
-app.include_router(dataset_router.router)
-app.include_router(forecast.router)
-app.include_router(report.router)
+app.include_router(auth_router)
+app.include_router(dataset_router)
+app.include_router(forecast_router)
+app.include_router(dashboard_router)
+app.include_router(notification_router)
+app.include_router(admin_router)
+app.include_router(report_router)
 
 @app.get("/")
-def home():
-
+def root():
     return {
-        "message": "AI Demand Forecasting API Running"
+        "message": "Advanced AI Demand Forecasting API Running"
     }

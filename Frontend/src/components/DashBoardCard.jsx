@@ -1,29 +1,51 @@
-function DashboardCard({
+const DashboardCard = ({
 
   title,
+
   value,
+
   color
 
-}) {
+}) => {
 
   return (
 
-    <div className={`rounded-3xl p-6 shadow-2xl backdrop-blur-lg border border-white/30 text-white ${color} hover:scale-105 transition duration-300`}>
+    <div className={`
 
-      <h3 className="text-lg font-medium">
+      bg-white
+
+      rounded-3xl
+
+      shadow-lg
+
+      p-6
+
+      border-l-8
+
+      ${color}
+
+      hover:scale-105
+
+      transition
+
+      duration-300
+
+    `}>
+
+      <h3 className="text-gray-500 text-lg">
 
         {title}
 
       </h3>
 
-      <h1 className="text-4xl font-bold mt-4">
+      <p className="text-4xl font-bold mt-4 text-gray-800">
 
         {value}
 
-      </h1>
+      </p>
 
     </div>
   );
-}
+};
 
 export default DashboardCard;

@@ -1,279 +1,431 @@
 import pandas as pd
-import numpy as np
-import os
+
+from prophet import Prophet
 
 from sklearn.linear_model import LinearRegression
 
+import numpy as np
 
-def generate_forecast():
 
-    # ---------------------------------
-    # Upload folder
-    # ---------------------------------
+# -----------------------------------
+# Prophet Forecast
+# -----------------------------------
 
-    upload_folder = "uploads"
+def run_prophet(
 
-    # ---------------------------------
-    # Get latest uploaded dataset
-    # ---------------------------------
+    df,
 
-    files = [
+    forecast_days=7
+):
 
-        os.path.join(upload_folder, file)
+    df = df.copy()
 
-        for file in os.listdir(upload_folder)
+    df.columns = [
 
+        col.lower().strip()
+
+        for col in df.columns
     ]
 
-    if not files:
+    # Detect date column
+    if "date" in df.columns:
 
-        raise Exception(
-            "No dataset uploaded"
-        )
+        date_col = "date"
 
-    latest_file = max(
-        files,
-        key=os.path.getctime
-    )
+    elif "sales_date" in df.columns:
 
-    file_path = latest_file
-
-    latest_file_name = os.path.basename(
-        latest_file
-    )
-
-    print("Reading file:", latest_file_name)
-
-    # ---------------------------------
-    # Read dataset
-    # ---------------------------------
-
-    if latest_file_name.endswith(".csv"):
-
-        df = pd.read_csv(file_path)
-
-    elif latest_file_name.endswith(".xlsx"):
-
-        df = pd.read_excel(file_path)
+        date_col = "sales_date"
 
     else:
 
         raise Exception(
-            "Unsupported dataset format"
+            "Date column not found"
         )
 
-    # ---------------------------------
-    # Normalize columns
-    # ---------------------------------
+    # Detect sales column
+    if "sales" in df.columns:
 
-    df.columns = (
+        sales_col = "sales"
 
-        df.columns
-        .str.lower()
-        .str.strip()
+    elif "sales_amount" in df.columns:
 
+        sales_col = "sales_amount"
+
+    elif "total" in df.columns:
+
+        sales_col = "total"
+
+    else:
+
+        raise Exception(
+            "Sales column not found"
+        )
+
+    prophet_df = pd.DataFrame({
+
+        "ds": pd.to_datetime(
+            df[date_col]
+        ),
+
+        "y": df[sales_col]
+    })
+
+    model = Prophet()
+
+    model.fit(prophet_df)
+
+    future = model.make_future_dataframe(
+
+        periods=forecast_days
     )
 
-    print("Columns:", df.columns)
+    forecast = model.predict(future)
 
-    # ---------------------------------
-    # Required columns
-    # ---------------------------------
-
-    required_columns = [
-
-        "date",
-        "product",
-        "sales"
-
-    ]
-
-    for col in required_columns:
-
-        if col not in df.columns:
-
-            raise Exception(
-                f"Missing required column: {col}"
-            )
-
-    # ---------------------------------
-    # Convert date
-    # ---------------------------------
-
-    df["date"] = pd.to_datetime(
-        df["date"],
-        errors="coerce"
+    forecast = forecast.tail(
+        forecast_days
     )
 
-    # ---------------------------------
-    # Convert sales
-    # ---------------------------------
+    # Sales Forecast
+    forecast_predictions = []
 
-    df["sales"] = pd.to_numeric(
+    # Revenue Forecast
+    revenue_predictions = []
 
-        df["sales"],
+    for _, row in forecast.iterrows():
 
-        errors="coerce"
+        predicted_value = round(
+            float(row["yhat"]),
+            2
+        )
 
-    )
+        forecast_predictions.append({
 
-    # ---------------------------------
-    # Clean only required fields
-    # ---------------------------------
+            "date": str(
+                row["ds"].date()
+            ),
 
-    df = df.dropna(
-
-        subset=[
-            "date",
-            "product",
-            "sales"
-        ]
-
-    )
-
-    print(
-        "Rows after cleaning:",
-        len(df)
-    )
-
-    print(
-        "Products:",
-        df["product"].unique()
-    )
-
-    # ---------------------------------
-    # Top Product Analytics
-    # ---------------------------------
-
-    product_sales = (
-
-        df.groupby("product")["sales"]
-        .sum()
-        .sort_values(ascending=False)
-
-    )
-
-    top_products = []
-
-    for product, sales in product_sales.items():
-
-        top_products.append({
-
-            "product": product,
-
-            "total_sales": round(
-                float(sales),
-                2
-            )
-
+            "predicted_sales":
+                predicted_value
         })
 
-    # ---------------------------------
-    # Forecast Preparation
-    # ---------------------------------
+        revenue_predictions.append({
 
-    daily_sales = (
+            "date": str(
+                row["ds"].date()
+            ),
 
-        df.groupby("date")["sales"]
-        .sum()
-        .reset_index()
+            "predicted_revenue":
+                predicted_value
+        })
 
-    )
+    return {
 
-    daily_sales = daily_sales.sort_values(
-        "date"
-    )
+        "forecast_predictions":
+            forecast_predictions,
 
-    daily_sales["day_number"] = np.arange(
-        len(daily_sales)
-    )
+        "revenue_predictions":
+            revenue_predictions
+    }
 
-    # ---------------------------------
-    # Train Model
-    # ---------------------------------
 
-    X = daily_sales[["day_number"]]
+# -----------------------------------
+# Linear Regression Forecast
+# -----------------------------------
 
-    y = daily_sales["sales"]
+def run_linear_regression(
+
+    df,
+
+    forecast_days=7
+):
+
+    df = df.copy()
+
+    df.columns = [
+
+        col.lower().strip()
+
+        for col in df.columns
+    ]
+
+    # Detect sales column
+    if "sales" in df.columns:
+
+        sales_col = "sales"
+
+    elif "sales_amount" in df.columns:
+
+        sales_col = "sales_amount"
+
+    elif "total" in df.columns:
+
+        sales_col = "total"
+
+    else:
+
+        raise Exception(
+            "Sales column not found"
+        )
+
+    df = df.reset_index()
+
+    X = np.array(
+        df.index
+    ).reshape(-1, 1)
+
+    y = df[sales_col].values
 
     model = LinearRegression()
 
     model.fit(X, y)
 
-    # ---------------------------------
-    # Predict Future Sales
-    # ---------------------------------
+    future_X = np.array(
 
-    future_days = np.array([
+        range(
+            len(df),
+            len(df) + forecast_days
+        )
 
-    [len(daily_sales) + i]
-
-    for i in range(10)
-
-    ])
+    ).reshape(-1, 1)
 
     predictions = model.predict(
-        future_days
+        future_X
     )
 
     forecast_predictions = []
 
-    for i, value in enumerate(predictions):
+    revenue_predictions = []
+
+    for i, pred in enumerate(predictions):
+
+        value = round(
+            float(pred),
+            2
+        )
 
         forecast_predictions.append({
 
-            "future_day": f"Day {i + 1}",
+            "date": f"Day {i+1}",
 
-            "predicted_sales": round(
-                float(value),
-                2
-            )
-
+            "predicted_sales":
+                value
         })
-        # ---------------------------------
-    # Revenue Forecast
-    # ---------------------------------
-
-    revenue_predictions = []
-
-
-
-    revenue_multiplier = 120
-
-    for i, value in enumerate(predictions):
-
-        predicted_revenue = (
-            float(value)
-            * revenue_multiplier
-        )
 
         revenue_predictions.append({
 
-            "future_day":
-                f"Day {i + 1}",
+            "date": f"Day {i+1}",
 
             "predicted_revenue":
-
-                round(
-                    predicted_revenue,
-                    2
-                )
-
+                value
         })
-
-    # ---------------------------------
-    # Final Response
-    # ---------------------------------
 
     return {
 
-    "top_products":
-        top_products,
+        "forecast_predictions":
+            forecast_predictions,
 
-    "forecast_predictions":
-        forecast_predictions,
+        "revenue_predictions":
+            revenue_predictions
+    }
 
-    "revenue_predictions":
-        revenue_predictions
 
-}
+# -----------------------------------
+# Top Products Analytics
+# -----------------------------------
+
+def top_products_analytics(df):
+
+    df = df.copy()
+
+    df.columns = [
+
+        col.lower().strip()
+
+        for col in df.columns
+    ]
+
+    # Product Column
+    product_col = None
+
+    if "product line" in df.columns:
+
+        product_col = "product line"
+
+    elif "product" in df.columns:
+
+        product_col = "product"
+
+    elif "product_name" in df.columns:
+
+        product_col = "product_name"
+
+    # Sales Column
+    sales_col = None
+
+    if "total" in df.columns:
+
+        sales_col = "total"
+
+    elif "sales" in df.columns:
+
+        sales_col = "sales"
+
+    elif "sales_amount" in df.columns:
+
+        sales_col = "sales_amount"
+
+    # Validation
+    if not product_col or not sales_col:
+
+        return []
+
+    grouped = (
+
+        df.groupby(product_col)[sales_col]
+
+        .sum()
+
+        .sort_values(
+            ascending=False
+        )
+
+        .head(10)
+    )
+
+    result = []
+
+    for product, sales in grouped.items():
+
+        result.append({
+
+            "product": str(product),
+
+            "total_sales": round(
+                float(sales),
+                2
+            )
+        })
+
+    return result
+
+
+# -----------------------------------
+# Main Forecast Generator
+# -----------------------------------
+
+def generate_forecast(
+
+    dataset_path,
+
+    model_name="prophet",
+
+    forecast_days=7
+):
+
+    df = pd.read_csv(
+        dataset_path
+    )
+
+    df.columns = [
+
+        col.lower().strip()
+
+        for col in df.columns
+    ]
+
+    # Run Forecast
+    if model_name.lower() == "prophet":
+
+        forecast_result = run_prophet(
+
+            df,
+
+            forecast_days
+        )
+
+    else:
+
+        forecast_result = run_linear_regression(
+
+            df,
+
+            forecast_days
+        )
+
+    # Top Products
+    top_products = top_products_analytics(
+        df
+    )
+
+    # -----------------------------------
+    # Dynamic Product Categories
+    # -----------------------------------
+
+    product_categories = []
+
+    print(df.columns.tolist())
+    
+    possible_columns = [
+
+        "product",
+
+        "product_name",
+
+        "product line",
+
+        "category",
+
+        "item",
+
+        "product_category"
+
+        "product category",
+
+        "clothing category",
+
+        "type",
+
+        "subcategory"
+    ]   
+
+    for col in df.columns:
+
+        print(df.columns)
+
+        if col.lower() in possible_columns:
+
+            product_categories = (
+
+                df[col]
+
+                .dropna()
+
+                .astype(str)
+
+                .unique()
+
+                .tolist()
+            )
+
+        break
+
+    return {
+
+        "forecast_predictions":
+
+            forecast_result[
+                "forecast_predictions"
+            ],
+
+        "revenue_predictions":
+
+            forecast_result[
+                "revenue_predictions"
+            ],
+
+        "top_products":
+            top_products,
+        
+        "product_categories":
+            product_categories
+    }

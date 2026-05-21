@@ -2,14 +2,19 @@ from fastapi import APIRouter
 
 from fastapi.responses import FileResponse
 
+from pydantic import BaseModel
+
 from reportlab.platypus import (
 
     SimpleDocTemplate,
-    Paragraph,
-    Spacer,
-    Table,
-    TableStyle
 
+    Paragraph,
+
+    Spacer,
+
+    Table,
+
+    TableStyle
 )
 
 from reportlab.lib import colors
@@ -18,23 +23,40 @@ from reportlab.lib.styles import (
     getSampleStyleSheet
 )
 
-import os
 import pandas as pd
 
-from app.services.forecast_service import (
-    generate_forecast
-)
 
 router = APIRouter(
+
     prefix="/report",
+
     tags=["Reports"]
 )
 
 
-@router.get("/pdf")
-def generate_pdf_report():
+# -----------------------------------
+# Request Schema
+# -----------------------------------
 
-    data = generate_forecast()
+class ReportRequest(BaseModel):
+
+    revenue_predictions: list
+
+    forecast_predictions: list
+
+    top_products: list
+
+
+# -----------------------------------
+# PDF REPORT
+# -----------------------------------
+
+@router.post("/pdf")
+
+def generate_pdf_report(
+
+    request: ReportRequest
+):
 
     pdf_path = "forecast_report.pdf"
 
@@ -46,54 +68,56 @@ def generate_pdf_report():
 
     elements = []
 
-    # ---------------------------------
+    # -----------------------------------
     # Title
-    # ---------------------------------
-
-    title = Paragraph(
-
-        "AI Demand Forecast Report",
-
-        styles["Title"]
-
-    )
-
-    elements.append(title)
-
-    elements.append(Spacer(1, 20))
-
-    # ---------------------------------
-    # Revenue Forecast Table
-    # ---------------------------------
+    # -----------------------------------
 
     elements.append(
 
         Paragraph(
-            "Revenue Forecast",
-            styles["Heading2"]
-        )
 
+            "AI Forecast Report",
+
+            styles["Title"]
+        )
     )
 
-    revenue_data = [
+    elements.append(
+        Spacer(1, 20)
+    )
 
-        [
-            "Future Day",
-            "Predicted Revenue"
-        ]
+    # -----------------------------------
+    # Revenue Forecast
+    # -----------------------------------
 
-    ]
+    elements.append(
 
-    for item in data["revenue_predictions"]:
+        Paragraph(
+
+            "Revenue Forecast",
+
+            styles["Heading2"]
+        )
+    )
+
+    revenue_data = [[
+
+        "Date",
+
+        "Revenue"
+    ]]
+
+    for item in request.revenue_predictions:
 
         revenue_data.append([
 
-            item["future_day"],
+            item["date"],
 
             str(
-                item["predicted_revenue"]
+                item[
+                    "predicted_revenue"
+                ]
             )
-
         ])
 
     revenue_table = Table(
@@ -105,65 +129,169 @@ def generate_pdf_report():
         TableStyle([
 
             (
+
                 "BACKGROUND",
+
                 (0, 0),
+
                 (-1, 0),
-                colors.lightblue
+
+                colors.blue
             ),
 
             (
+
                 "TEXTCOLOR",
+
                 (0, 0),
+
                 (-1, 0),
+
                 colors.white
             ),
 
             (
+
                 "GRID",
+
                 (0, 0),
+
                 (-1, -1),
+
                 1,
+
                 colors.black
-            ),
-
+            )
         ])
-
     )
 
-    elements.append(revenue_table)
+    elements.append(
+        revenue_table
+    )
 
-    elements.append(Spacer(1, 30))
+    elements.append(
+        Spacer(1, 20)
+    )
 
-    # ---------------------------------
-    # Top Products Table
-    # ---------------------------------
+    # -----------------------------------
+    # Sales Forecast
+    # -----------------------------------
 
     elements.append(
 
         Paragraph(
-            "Top Selling Products",
+
+            "Sales Forecast",
+
             styles["Heading2"]
         )
-
     )
 
-    product_data = [
+    sales_data = [[
 
-        [
-            "Product",
-            "Total Sales"
-        ]
+        "Date",
 
-    ]
+        "Sales"
+    ]]
 
-    for item in data["top_products"]:
+    for item in request.forecast_predictions:
+
+        sales_data.append([
+
+            item["date"],
+
+            str(
+                item[
+                    "predicted_sales"
+                ]
+            )
+        ])
+
+    sales_table = Table(
+        sales_data
+    )
+
+    sales_table.setStyle(
+
+        TableStyle([
+
+            (
+
+                "BACKGROUND",
+
+                (0, 0),
+
+                (-1, 0),
+
+                colors.orange
+            ),
+
+            (
+
+                "TEXTCOLOR",
+
+                (0, 0),
+
+                (-1, 0),
+
+                colors.white
+            ),
+
+            (
+
+                "GRID",
+
+                (0, 0),
+
+                (-1, -1),
+
+                1,
+
+                colors.black
+            )
+        ])
+    )
+
+    elements.append(
+        sales_table
+    )
+
+    elements.append(
+        Spacer(1, 20)
+    )
+
+    # -----------------------------------
+    # Top Products
+    # -----------------------------------
+
+    elements.append(
+
+        Paragraph(
+
+            "Top Selling Products",
+
+            styles["Heading2"]
+        )
+    )
+
+    product_data = [[
+
+        "Product",
+
+        "Total Sales"
+    ]]
+
+    for item in request.top_products:
 
         product_data.append([
 
             item["product"],
 
-            str(item["total_sales"])
-
+            str(
+                item[
+                    "total_sales"
+                ]
+            )
         ])
 
     product_table = Table(
@@ -175,36 +303,49 @@ def generate_pdf_report():
         TableStyle([
 
             (
+
                 "BACKGROUND",
+
                 (0, 0),
+
                 (-1, 0),
+
                 colors.green
             ),
 
             (
+
                 "TEXTCOLOR",
+
                 (0, 0),
+
                 (-1, 0),
+
                 colors.white
             ),
 
             (
+
                 "GRID",
+
                 (0, 0),
+
                 (-1, -1),
+
                 1,
+
                 colors.black
-            ),
-
+            )
         ])
-
     )
 
-    elements.append(product_table)
+    elements.append(
+        product_table
+    )
 
-    # ---------------------------------
+    # -----------------------------------
     # Build PDF
-    # ---------------------------------
+    # -----------------------------------
 
     doc.build(elements)
 
@@ -215,45 +356,41 @@ def generate_pdf_report():
         filename="forecast_report.pdf",
 
         media_type="application/pdf"
-
     )
-@router.get("/excel")
-def generate_excel_report():
 
-    data = generate_forecast()
+
+# -----------------------------------
+# EXCEL REPORT
+# -----------------------------------
+
+@router.post("/excel")
+
+def generate_excel_report(
+
+    request: ReportRequest
+):
 
     excel_path = "forecast_report.xlsx"
 
-    # ---------------------------------
-    # Revenue Forecast Sheet
-    # ---------------------------------
-
     revenue_df = pd.DataFrame(
-        data["revenue_predictions"]
-    )
 
-    # ---------------------------------
-    # Sales Forecast Sheet
-    # ---------------------------------
+        request.revenue_predictions
+    )
 
     sales_df = pd.DataFrame(
-        data["forecast_predictions"]
-    )
 
-    # ---------------------------------
-    # Top Products Sheet
-    # ---------------------------------
+        request.forecast_predictions
+    )
 
     products_df = pd.DataFrame(
-        data["top_products"]
+
+        request.top_products
     )
 
-    # ---------------------------------
-    # Create Excel File
-    # ---------------------------------
-
     with pd.ExcelWriter(
+
         excel_path,
+
         engine="openpyxl"
     ) as writer:
 
@@ -261,30 +398,30 @@ def generate_excel_report():
 
             writer,
 
-            sheet_name="Revenue Forecast",
+            sheet_name=
+                "Revenue Forecast",
 
             index=False
-
         )
 
         sales_df.to_excel(
 
             writer,
 
-            sheet_name="Sales Forecast",
+            sheet_name=
+                "Sales Forecast",
 
             index=False
-
         )
 
         products_df.to_excel(
 
             writer,
 
-            sheet_name="Top Products",
+            sheet_name=
+                "Top Products",
 
             index=False
-
         )
 
     return FileResponse(
@@ -294,6 +431,5 @@ def generate_excel_report():
         filename="forecast_report.xlsx",
 
         media_type=
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )

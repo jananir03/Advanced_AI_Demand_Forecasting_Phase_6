@@ -1,40 +1,38 @@
-from datetime import datetime, timedelta
-
 from jose import JWTError, jwt
 
-from fastapi import Depends, HTTPException
+from fastapi import (
+    Depends,
+    HTTPException,
+    status
+)
 
 from fastapi.security import OAuth2PasswordBearer
 
-SECRET_KEY = "mysecretkey"
+from sqlalchemy.orm import Session
 
-ALGORITHM = "HS256"
-
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
-
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/auth/login"
+from app.config.settings import (
+    SECRET_KEY,
+    ALGORITHM
 )
 
-def create_access_token(data: dict):
+from app.config.database import get_db
 
-    to_encode = data.copy()
+from app.models.user import User
 
-    expire = datetime.utcnow() + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="login"
+)
+
+
+def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid authentication credentials"
     )
-
-    to_encode.update({"exp": expire})
-
-    encoded_jwt = jwt.encode(
-        to_encode,
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
-
-    return encoded_jwt
-
-def verify_access_token(token: str):
 
     try:
 
@@ -44,26 +42,19 @@ def verify_access_token(token: str):
             algorithms=[ALGORITHM]
         )
 
-        email = payload.get("sub")
+        user_id = payload.get("user_id")
 
-        if email is None:
-
-            raise HTTPException(
-                status_code=401,
-                detail="Invalid token"
-            )
-
-        return email
+        if user_id is None:
+            raise credentials_exception
 
     except JWTError:
+        raise credentials_exception
 
-        raise HTTPException(
-            status_code=401,
-            detail="Token is invalid or expired"
-        )
+    user = db.query(User).filter(
+        User.id == user_id
+    ).first()
 
-def get_current_user(
-    token: str = Depends(oauth2_scheme)
-):
+    if user is None:
+        raise credentials_exception
 
-    return verify_access_token(token)
+    return user

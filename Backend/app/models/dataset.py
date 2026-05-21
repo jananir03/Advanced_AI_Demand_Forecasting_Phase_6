@@ -1,19 +1,48 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    DateTime,
+    ForeignKey
+)
+
+from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from app.database import Base
+from app.config.database import Base
+
 
 class Dataset(Base):
-
     __tablename__ = "datasets"
 
     id = Column(Integer, primary_key=True, index=True)
 
-    filename = Column(String(255))
+    dataset_name = Column(String(255), nullable=False)
 
-    upload_time = Column(
+    original_filename = Column(String(255))
+
+    upload_date = Column(
         DateTime,
         default=datetime.utcnow
     )
 
     total_records = Column(Integer)
+
+    missing_values = Column(Integer)
+
+    duplicates_removed = Column(Integer)
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id")
+    )
+
+    user = relationship(
+        "User",
+        back_populates="datasets"
+    )
+
+    sales_records = relationship(
+        "SalesRecord",
+        back_populates="dataset"
+    )

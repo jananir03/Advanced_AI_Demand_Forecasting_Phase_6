@@ -1,184 +1,209 @@
-from fastapi import APIRouter
-from fastapi import UploadFile
-from fastapi import File
-from fastapi import HTTPException
+from fastapi import (
+    APIRouter,
+    UploadFile,
+    File,
+    Depends,
+    HTTPException
+)
+
+from sqlalchemy.orm import Session
 
 import pandas as pd
 
-import shutil
-import os
+from app.config.database import get_db
+
+from app.models.dataset import Dataset
+from app.models.sales_record import SalesRecord
+from app.models.user import User
+
+from app.core.auth import get_current_user
+
+from app.utils.preprocessing import (
+    validate_dataset,
+    clean_dataset
+)
+
+from app.services.notification_service import (
+    create_notification
+)
 
 router = APIRouter(
-    prefix="/dataset",
-    tags=["Dataset"]
+    prefix="/datasets",
+    tags=["Datasets"]
 )
 
 
 @router.post("/upload")
 async def upload_dataset(
 
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
 
+    db: Session = Depends(get_db),
+
+    current_user: User = Depends(
+        get_current_user
+    )
 ):
 
-    # ---------------------------------
-    # Upload folder
-    # ---------------------------------
-
-    upload_folder = "uploads"
-
-    os.makedirs(
-        upload_folder,
-        exist_ok=True
-    )
-
-    # ---------------------------------
-    # Delete old datasets
-    # ---------------------------------
-
-    for old_file in os.listdir(upload_folder):
-
-        old_file_path = os.path.join(
-            upload_folder,
-            old_file
-        )
-
-        if os.path.isfile(old_file_path):
-
-            os.remove(old_file_path)
-
-    # ---------------------------------
-    # Save new dataset
-    # ---------------------------------
-
-    file_path = os.path.join(
-        upload_folder,
-        file.filename
-    )
-
-    with open(file_path, "wb") as buffer:
-
-        shutil.copyfileobj(
-            file.file,
-            buffer
-        )
-
-    # ---------------------------------
-    # Read dataset
-    # ---------------------------------
-
-    try:
-
-        if file.filename.endswith(".csv"):
-
-            df = pd.read_csv(file_path)
-
-        elif file.filename.endswith(".xlsx"):
-
-            df = pd.read_excel(file_path)
-
-        else:
-
-            raise HTTPException(
-
-                status_code=400,
-
-                detail=
-                    "Only CSV and Excel files are supported"
-
-            )
-
-    except Exception as e:
+    if not file.filename.endswith(
+        (".csv", ".xlsx")
+    ):
 
         raise HTTPException(
 
             status_code=400,
 
-            detail=f"Dataset read failed: {str(e)}"
-
+            detail="Only CSV or Excel files allowed"
         )
 
-    # ---------------------------------
-    # Normalize columns
-    # ---------------------------------
+    try:
 
-    df.columns = (
+        if file.filename.endswith(".csv"):
 
-        df.columns
-        .str.lower()
-        .str.strip()
+            df = pd.read_csv(file.file)
 
+        else:
+
+            df = pd.read_excel(file.file)
+
+    except Exception:
+
+        raise HTTPException(
+
+            status_code=400,
+
+            detail="Invalid file format"
+        )
+
+    missing_columns = validate_dataset(df)
+
+    if missing_columns:
+
+        raise HTTPException(
+
+            status_code=400,
+
+            detail=f"Missing columns: {missing_columns}"
+        )
+
+    df, missing_values, duplicates_removed = (
+        clean_dataset(df)
     )
 
-    # ---------------------------------
-    # Required columns
-    # ---------------------------------
+    dataset = Dataset(
 
-    required_columns = [
+        dataset_name=file.filename,
 
-        "date",
-        "product",
-        "sales"
+        original_filename=file.filename,
 
-    ]
+        total_records=len(df),
 
-    for col in required_columns:
+        missing_values=missing_values,
 
-        if col not in df.columns:
+        duplicates_removed=duplicates_removed,
 
-            raise HTTPException(
+        user_id=current_user.id
+    )
 
-                status_code=400,
+    db.add(dataset)
 
-                detail=
-                    f"Missing required column: {col}"
+    db.commit()
 
-            )
+    db.refresh(dataset)
 
-    # ---------------------------------
-    # Clean dataset
-    # ---------------------------------
+    for _, row in df.iterrows():
 
-    original_rows = len(df)
+        sales_record = SalesRecord(
 
-    df = df.dropna()
+            product_name=row["product"],
 
-    cleaned_rows = len(df)
+            category=row.get(
+                "category",
+                None
+            ),
 
-    # ---------------------------------
-    # Save cleaned dataset
-    # ---------------------------------
+            region=row.get(
+                "region",
+                None
+            ),
 
-    if file.filename.endswith(".csv"):
+            sales_date=pd.to_datetime(
+                row["date"]
+            ),
 
-        df.to_csv(
-            file_path,
-            index=False
+            sales_amount=float(
+                row["sales"]
+            ),
+
+            quantity=int(
+                row["quantity"]
+            ),
+
+            dataset_id=dataset.id
         )
 
-    elif file.filename.endswith(".xlsx"):
+        db.add(sales_record)
 
-        df.to_excel(
-            file_path,
-            index=False
-        )
+    db.commit()
 
-    # ---------------------------------
-    # Success response
-    # ---------------------------------
+    # -----------------------------------
+    # Create Notification
+    # -----------------------------------
+
+    create_notification(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        title="Dataset Uploaded",
+
+        message=f"{file.filename} uploaded successfully"
+    )
 
     return {
 
         "message":
             "Dataset uploaded successfully",
 
-        "file_name":
-            file.filename,
+        "dataset_id":
+            int(dataset.id),
 
-        "original_rows":
-            original_rows,
+        "total_records":
+            int(len(df)),
 
-        "cleaned_rows":
-            cleaned_rows
+        "missing_values":
+            int(missing_values),
 
+        "duplicates_removed":
+            int(duplicates_removed)
     }
+
+# -----------------------------------
+# Get All Uploaded Datasets
+# -----------------------------------
+
+@router.get("/")
+
+def get_datasets(
+
+    db: Session = Depends(get_db)
+):
+
+    datasets = db.query(
+        Dataset
+    ).all()
+
+    return [
+
+        {
+
+            "id":
+                dataset.id,
+
+            "name":
+                dataset.dataset_name
+        }
+
+        for dataset in datasets
+    ]

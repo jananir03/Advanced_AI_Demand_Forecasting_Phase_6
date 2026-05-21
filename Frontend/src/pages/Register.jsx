@@ -4,126 +4,255 @@ import { useNavigate, Link } from "react-router-dom";
 
 import API from "../services/api";
 
-function Register() {
+const Register = () => {
 
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
 
-  name: "",
-  email: "",
-  password: "",
+    username: "",
+
+    email: "",
+
+    password: "",
   });
+
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
 
     setFormData({
 
       ...formData,
+
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleRegister = async () => {
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
 
     try {
 
       await API.post(
-        "/auth/register",
+        "/register",
         formData
       );
 
-      alert("Registration Successful");
+      setMessage(
+        "Registration successful!"
+      );
 
-      navigate("/");
+      setTimeout(() => {
 
-    } catch (error) {
+        navigate("/login");
 
-      console.log(error);
+      }, 1500);
 
-      alert("Registration Failed");
+    } catch (err) {
+
+      setMessage(
+        "Registration failed"
+      );
     }
   };
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-400 to-blue-900">
+    <div className="min-h-screen flex bg-gradient-to-br from-purple-700 via-blue-700 to-cyan-500">
 
-      {/* Top Navbar */}
-      <div className="w-full bg-white/20 backdrop-blur-lg border-b border-white/30 shadow-lg p-5">
+      {/* LEFT SIDE */}
 
-        <h1 className="text-3xl font-bold text-slate-800 text-center">
+      <div className="hidden lg:flex w-1/2 items-center justify-center p-16 relative overflow-hidden">
 
-          AI Demand Forecasting
+        {/* Background Glow */}
 
-        </h1>
+        <div className="absolute bottom-20 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
 
-      </div>
+        <div className="absolute top-20 right-20 w-60 h-60 bg-cyan-300/10 rounded-full blur-3xl"></div>
 
-      {/* Register Card */}
-      <div className="flex items-center justify-center mt-16">
+        {/* Analytics Shapes */}
 
-        <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/30 w-[420px]">
+        <div className="absolute bottom-24 left-20 opacity-20">
 
-          <h1 className="text-4xl font-bold text-slate-800 text-center">
+          <div className="flex items-end gap-4 h-40">
 
-            Create Account
+            <div className="w-6 h-20 bg-white rounded"></div>
+
+            <div className="w-6 h-28 bg-white rounded"></div>
+
+            <div className="w-6 h-16 bg-white rounded"></div>
+
+            <div className="w-6 h-36 bg-white rounded"></div>
+
+            <div className="w-6 h-24 bg-white rounded"></div>
+
+          </div>
+
+        </div>
+
+        {/* Text */}
+
+        <div className="z-10 max-w-lg">
+
+          <h1 className="text-6xl font-extrabold leading-tight text-white">
+
+            Join The Future Of
+
+            <span className="block bg-gradient-to-r from-cyan-300 to-pink-300 bg-clip-text text-transparent">
+
+              AI Forecasting
+
+            </span>
 
           </h1>
 
-          <p className="text-slate-700 text-center mt-3">
+          <p className="mt-8 text-2xl text-white/90 font-light leading-relaxed">
+
+            Create your account and unlock intelligent forecasting insights.
+
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* RIGHT SIDE */}
+
+      <div className="flex w-full lg:w-1/2 items-center justify-center p-6">
+
+        <div className="bg-white/95 backdrop-blur-md w-full max-w-md rounded-3xl shadow-2xl p-10">
+
+          {/* Logo */}
+
+          <div className="flex justify-center mb-6">
+
+            <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+
+              <span className="text-4xl text-white">
+
+                🚀
+
+              </span>
+
+            </div>
+
+          </div>
+
+          {/* Heading */}
+
+          <h2 className="text-4xl font-bold text-center text-gray-800">
+
+            Create Account
+
+          </h2>
+
+          <p className="text-center text-gray-500 mt-3 mb-8">
 
             Start your AI forecasting journey
 
           </p>
 
-          <div className="mt-8 flex flex-col gap-5">
+          {/* Message */}
 
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              onChange={handleChange}
-              className="p-4 rounded-xl bg-white text-slate-800 outline-none"
-            />
+          {message && (
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              onChange={handleChange}
-              className="p-4 rounded-xl bg-white text-slate-800 outline-none"
-            />
+            <div className="bg-blue-100 text-blue-700 p-3 rounded-lg mb-5 text-center">
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              onChange={handleChange}
-              className="p-4 rounded-xl bg-white text-slate-800 outline-none"
-            />
+              {message}
+
+            </div>
+          )}
+
+          {/* Form */}
+
+          <form onSubmit={handleSubmit}>
+
+            <div className="mb-5">
+
+              <input
+
+                type="text"
+
+                name="username"
+
+                placeholder="Username"
+
+                className="w-full border border-gray-300 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500"
+
+                onChange={handleChange}
+              />
+
+            </div>
+
+            <div className="mb-5">
+
+              <input
+
+                type="email"
+
+                name="email"
+
+                placeholder="Email"
+
+                className="w-full border border-gray-300 rounded-xl p-4 outline-none focus:ring-2 focus:ring-cyan-500"
+
+                onChange={handleChange}
+              />
+
+            </div>
+
+            <div className="mb-6">
+
+              <input
+
+                type="password"
+
+                name="password"
+
+                placeholder="Password"
+
+                className="w-full border border-gray-300 rounded-xl p-4 outline-none focus:ring-2 focus:ring-purple-500"
+
+                onChange={handleChange}
+              />
+
+            </div>
+
+            {/* Button */}
 
             <button
-              onClick={handleRegister}
-              className="bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl text-lg font-semibold transition"
+
+              type="submit"
+
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-xl font-semibold text-lg hover:scale-105 transition duration-300 shadow-lg"
             >
+
               Register
+
             </button>
 
-            <p className="text-center text-slate-700">
+          </form>
 
-              Already have an account?
+          {/* Login */}
 
-              <Link
-                to="/"
-                className="font-bold ml-2 text-blue-900"
-              >
-                Login
-              </Link>
+          <p className="text-center mt-8 text-gray-600">
 
-            </p>
+            Already have an account?
 
-          </div>
+            <Link
+
+              to="/login"
+
+              className="text-purple-600 font-semibold ml-2 hover:underline"
+            >
+
+              Login!
+
+            </Link>
+
+          </p>
 
         </div>
 
@@ -131,6 +260,6 @@ function Register() {
 
     </div>
   );
-}
+};
 
 export default Register;

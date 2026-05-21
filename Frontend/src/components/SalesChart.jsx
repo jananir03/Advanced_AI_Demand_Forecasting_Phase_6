@@ -1,4 +1,5 @@
 import {
+
   LineChart,
   Line,
   XAxis,
@@ -6,56 +7,40 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid
+
 } from "recharts";
 
-const salesData = [
-
-  { month: "Jan", sales: 4000 },
-  { month: "Feb", sales: 3000 },
-  { month: "Mar", sales: 5000 },
-  { month: "Apr", sales: 4500 },
-  { month: "May", sales: 6000 },
-  { month: "Jun", sales: 7000 },
-
-];
-
-function SalesChart() {
+const SalesChart = ({ data }) => {
 
   return (
 
-    <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-6 border border-white/30 h-[400px]">
+    <ResponsiveContainer width="100%" height={300}>
 
-      <h2 className="text-2xl font-bold text-slate-800 mb-6">
+      <LineChart data={data}>
 
-        Monthly Sales Trends
+        <CartesianGrid strokeDasharray="3 3" />
 
-      </h2>
+        <XAxis dataKey="month" />
 
-      <ResponsiveContainer width="100%" height={400}>
+        <YAxis />
 
-        <LineChart data={salesData}>
+        <Tooltip />
 
-          <CartesianGrid strokeDasharray="3 3" />
+        <Line
 
-          <XAxis dataKey="month" />
+          type="monotone"
 
-          <YAxis />
+          dataKey="sales"
 
-          <Tooltip />
+          stroke="#2563eb"
 
-          <Line
-            type="monotone"
-            dataKey="sales"
-            stroke="#1d4ed8"
-            strokeWidth={4}
-          />
+          strokeWidth={4}
+        />
 
-        </LineChart>
+      </LineChart>
 
-      </ResponsiveContainer>
-
-    </div>
+    </ResponsiveContainer>
   );
-}
+};
 
 export default SalesChart;
