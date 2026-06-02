@@ -27,6 +27,10 @@ from app.services.notification_service import (
     create_notification
 )
 
+from app.services.activity_service import (
+    create_activity
+)
+
 router = APIRouter(
     prefix="/datasets",
     tags=["Datasets"]
@@ -145,6 +149,17 @@ async def upload_dataset(
         db.add(sales_record)
 
     db.commit()
+
+    create_activity(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        activity_type="Dataset Upload",
+
+        description=f"{current_user.username} uploaded {file.filename}"
+    )
 
     # -----------------------------------
     # Create Notification

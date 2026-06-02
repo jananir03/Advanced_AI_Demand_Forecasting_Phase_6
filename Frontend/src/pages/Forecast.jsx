@@ -241,10 +241,9 @@ const Forecast = () => {
                 item.predicted_sales,
 
               predicted_revenue:
-                (
-                  revenueForecast[index]
-                    ?.predicted_revenue || 0
-                ) * 1.25
+                revenueForecast[index]
+                ?.predicted_revenue || 0
+                
             })
           );
 
@@ -344,7 +343,16 @@ const Forecast = () => {
         setForecastData(
           filteredData
         );
+        
+        localStorage.setItem(
+          "active_dataset_id",
+          selectedDataset?.id
+        );
 
+        localStorage.setItem(
+         "active_dataset_name",
+          selectedDataset?.name
+        );
 
         // -----------------------------------
         // Save Report Data
@@ -643,6 +651,12 @@ const Forecast = () => {
                   <option>
 
                     Linear Regression
+
+                  </option>
+
+                  <option>
+
+                    Random Forest
 
                   </option>
 

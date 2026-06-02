@@ -4,6 +4,8 @@ from prophet import Prophet
 
 from sklearn.linear_model import LinearRegression
 
+from sklearn.ensemble import RandomForestRegressor
+
 import numpy as np
 
 
@@ -85,10 +87,8 @@ def run_prophet(
         forecast_days
     )
 
-    # Sales Forecast
     forecast_predictions = []
 
-    # Revenue Forecast
     revenue_predictions = []
 
     for _, row in forecast.iterrows():
@@ -115,7 +115,7 @@ def run_prophet(
             ),
 
             "predicted_revenue":
-                predicted_value
+                round(predicted_value * 1.5, 2)
         })
 
     return {
@@ -148,7 +148,6 @@ def run_linear_regression(
         for col in df.columns
     ]
 
-    # Detect sales column
     if "sales" in df.columns:
 
         sales_col = "sales"
@@ -216,7 +215,117 @@ def run_linear_regression(
             "date": f"Day {i+1}",
 
             "predicted_revenue":
+                round(value * 1.35, 2)
+        })
+
+    return {
+
+        "forecast_predictions":
+            forecast_predictions,
+
+        "revenue_predictions":
+            revenue_predictions
+    }
+
+
+# -----------------------------------
+# Random Forest Forecast
+# -----------------------------------
+
+def run_random_forest(
+
+    df,
+
+    forecast_days=7
+):
+
+    df = df.copy()
+
+    df.columns = [
+
+        col.lower().strip()
+
+        for col in df.columns
+    ]
+
+    if "sales" in df.columns:
+
+        sales_col = "sales"
+
+    elif "sales_amount" in df.columns:
+
+        sales_col = "sales_amount"
+
+    elif "total" in df.columns:
+
+        sales_col = "total"
+
+    else:
+
+        raise Exception(
+            "Sales column not found"
+        )
+
+    df = df.reset_index()
+
+    X = np.array(
+        df.index
+    ).reshape(-1, 1)
+
+    y = df[sales_col].values
+
+    model = RandomForestRegressor(
+
+        n_estimators=100,
+
+        random_state=42
+    )
+
+    model.fit(X, y)
+
+    future_X = np.array(
+
+        range(
+            len(df),
+            len(df) + forecast_days
+        )
+
+    ).reshape(-1, 1)
+
+    predictions = model.predict(
+        future_X
+    )
+
+    forecast_predictions = []
+
+    revenue_predictions = []
+
+    for i, pred in enumerate(predictions):
+
+        fluctuation = np.random.uniform(
+            0.9,
+            1.2
+        )
+
+        value = round(
+            float(pred * fluctuation),
+            2
+        )
+
+        forecast_predictions.append({
+
+            "date": f"Day {i+1}",
+
+            "predicted_sales":
                 value
+        })
+
+        revenue_predictions.append({
+
+            "date": f"Day {i+1}",
+
+            "predicted_revenue":
+                round(value * 1.65, 2)
         })
 
     return {
@@ -244,7 +353,6 @@ def top_products_analytics(df):
         for col in df.columns
     ]
 
-    # Product Column
     product_col = None
 
     if "product line" in df.columns:
@@ -259,7 +367,6 @@ def top_products_analytics(df):
 
         product_col = "product_name"
 
-    # Sales Column
     sales_col = None
 
     if "total" in df.columns:
@@ -274,7 +381,6 @@ def top_products_analytics(df):
 
         sales_col = "sales_amount"
 
-    # Validation
     if not product_col or not sales_col:
 
         return []
@@ -333,10 +439,22 @@ def generate_forecast(
         for col in df.columns
     ]
 
-    # Run Forecast
+    # -----------------------------------
+    # MODEL SELECTION
+    # -----------------------------------
+
     if model_name.lower() == "prophet":
 
         forecast_result = run_prophet(
+
+            df,
+
+            forecast_days
+        )
+
+    elif model_name.lower() == "random forest":
+
+        forecast_result = run_random_forest(
 
             df,
 
@@ -352,7 +470,6 @@ def generate_forecast(
             forecast_days
         )
 
-    # Top Products
     top_products = top_products_analytics(
         df
     )
@@ -363,8 +480,6 @@ def generate_forecast(
 
     product_categories = []
 
-    print(df.columns.tolist())
-    
     possible_columns = [
 
         "product",
@@ -377,7 +492,7 @@ def generate_forecast(
 
         "item",
 
-        "product_category"
+        "product_category",
 
         "product category",
 
@@ -386,11 +501,9 @@ def generate_forecast(
         "type",
 
         "subcategory"
-    ]   
+    ]
 
     for col in df.columns:
-
-        print(df.columns)
 
         if col.lower() in possible_columns:
 
@@ -407,7 +520,7 @@ def generate_forecast(
                 .tolist()
             )
 
-        break
+            break
 
     return {
 
@@ -425,7 +538,7 @@ def generate_forecast(
 
         "top_products":
             top_products,
-        
+
         "product_categories":
             product_categories
     }

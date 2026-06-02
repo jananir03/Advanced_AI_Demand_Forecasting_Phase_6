@@ -11,9 +11,17 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
 
+  // -----------------------------------
+  // ROLE
+  // -----------------------------------
+
+  const role = localStorage.getItem(
+    "role"
+  );
+
   return (
 
-    <div className="w-72 min-h-screen bg-slate-900 text-white shadow-2xl p-6 relative overflow-hidden">
+    <div className="w-72 h-screen fixed left-0 top-0 bg-slate-900 text-white shadow-2xl p-6 overflow-y-auto z-50">
 
       {/* Blur Background */}
 
@@ -33,7 +41,29 @@ const Sidebar = () => {
 
         <p className="text-gray-300 mt-2 text-sm">
 
-          Analytics Platform
+          Welcome {
+
+            localStorage.getItem(
+              "username"
+            )
+
+              ?
+
+              localStorage
+                .getItem("username")
+                .charAt(0)
+                .toUpperCase()
+
+              +
+
+              localStorage
+                .getItem("username")
+                .slice(1)
+
+              :
+
+              "User"
+          }         
 
         </p>
 
@@ -43,6 +73,8 @@ const Sidebar = () => {
 
       <nav className="relative z-10 space-y-3">
 
+        {/* Dashboard */}
+
         <Link
           to="/dashboard"
           className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
@@ -51,21 +83,37 @@ const Sidebar = () => {
           Dashboard
         </Link>
 
-        <Link
-          to="/upload"
-          className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
-        >
-          <Upload size={22} />
-          Upload Dataset
-        </Link>
+        {/* Upload Dataset */}
 
-        <Link
-          to="/forecast"
-          className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
-        >
-          <LineChart size={22} />
-          Forecast
-        </Link>
+        {(role === "super_admin" ||
+
+          role === "analyst") && (
+
+          <Link
+            to="/upload"
+            className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+          >
+            <Upload size={22} />
+            Upload Dataset
+          </Link>
+        )}
+
+        {/* Forecast */}
+
+        {(role === "super_admin" ||
+
+          role === "analyst") && (
+
+          <Link
+            to="/forecast"
+            className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+          >
+            <LineChart size={22} />
+            Forecast
+          </Link>
+        )}
+
+        {/* Reports */}
 
         <Link
           to="/reports"
@@ -75,6 +123,8 @@ const Sidebar = () => {
           Reports
         </Link>
 
+        {/* Notifications */}
+
         <Link
           to="/notifications"
           className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
@@ -83,13 +133,18 @@ const Sidebar = () => {
           Notifications
         </Link>
 
-        <Link
-          to="/admin"
-          className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
-        >
-          <ShieldCheck size={22} />
-          Admin
-        </Link>
+        {/* Admin */}
+
+        {role === "super_admin" && (
+
+          <Link
+            to="/admin"
+            className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+          >
+            <ShieldCheck size={22} />
+            Admin
+          </Link>
+        )}
 
       </nav>
 

@@ -1,11 +1,67 @@
+import { useEffect, useState } from "react";
+
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 
 const MainLayout = ({ children }) => {
 
+  const [theme, setTheme] = useState(
+
+    localStorage.getItem("theme") ||
+
+    "light"
+  );
+
+  useEffect(() => {
+
+    localStorage.setItem(
+      "theme",
+      theme
+    );
+    if (theme =="dark") {
+      document.documentElement.classList.add(
+        "dark"
+      );
+    } else {
+
+      document.documentElement.classList.remove(
+        "dark"
+      );
+    }
+
+  }, [theme]);
+
+  
+
   return (
 
-    <div className="flex min-h-screen bg-gradient-to-br from-blue-700 via-sky-200 to-indigo-300 relative overflow-hidden">
+    <div
+
+      className={`
+
+        flex
+
+        min-h-screen
+
+        relative
+
+        overflow-hidden
+
+        transition-all
+
+        duration-300
+
+        ${
+
+          theme === "dark"
+
+            ? "bg-slate-900"
+
+            : "bg-gradient-to-br from-blue-700 via-sky-200 to-indigo-300"
+        }
+
+      `}
+    >
 
       {/* LEFT GLOW */}
 
@@ -40,15 +96,73 @@ const MainLayout = ({ children }) => {
 
       </div>
 
-      {/* MAIN CONTENT */}
+      {/* SIDEBAR */}
 
       <Sidebar />
 
-      <div className="flex-1 flex flex-col relative z-10">
+      {/* MAIN CONTENT */}
+
+      <div className="flex-1 flex flex-col relative z-10 ml-72">
 
         <Navbar />
 
-        <div className="p-6">
+        {/* THEME TOGGLE */}
+
+        <div className="flex justify-end px-6 pt-4">
+
+          <button
+
+            onClick={() =>
+
+              setTheme(
+
+                theme === "dark"
+
+                  ? "light"
+
+                  : "dark"
+              )
+            }
+
+            className="bg-slate-800 text-white px-4 py-2 rounded-xl shadow-lg hover:scale-105 transition"
+          >
+
+            {
+
+              theme === "dark"
+
+                ? "☀️ Light Mode"
+
+                : "🌙 Dark Mode"
+            }
+
+          </button>
+
+        </div>
+
+        <div
+
+          className={`
+
+            p-6
+
+            overflow-y-auto
+
+            transition-all
+
+            duration-300
+
+            ${
+
+              theme === "dark"
+
+                ? "text-white"
+
+                : "text-black"
+            }
+
+          `}
+        >
 
           {children}
 

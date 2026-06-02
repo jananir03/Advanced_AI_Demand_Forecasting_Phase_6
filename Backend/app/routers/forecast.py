@@ -2,11 +2,8 @@ import json
 import pandas as pd
 
 from fastapi import (
-
     APIRouter,
-
     Depends,
-
     HTTPException
 )
 
@@ -34,6 +31,10 @@ from app.core.auth import (
     get_current_user
 )
 
+from app.core.permissions import (
+    require_roles
+)
+
 from app.services.forecast_service import (
 
     run_linear_regression,
@@ -47,6 +48,11 @@ from app.services.notification_service import (
     create_notification
 )
 
+from app.services.activity_service import (
+    create_activity
+)
+
+
 router = APIRouter(
 
     prefix="/forecast",
@@ -56,6 +62,7 @@ router = APIRouter(
 
 
 @router.post("/generate")
+
 def generate_forecast(
 
     request: ForecastRequest,
@@ -63,7 +70,13 @@ def generate_forecast(
     db: Session = Depends(get_db),
 
     current_user: User = Depends(
-        get_current_user
+
+        require_roles([
+
+            "super_admin",
+
+            "analyst"
+        ])
     )
 ):
 
@@ -103,10 +116,8 @@ def generate_forecast(
 
     df = pd.DataFrame(data)
 
-   
-
     # -----------------------------------
-    # Forecast Duration
+    # FORECAST DURATION
     # -----------------------------------
 
     forecast_days = 30
@@ -120,29 +131,25 @@ def generate_forecast(
         forecast_days = 90
 
     # -----------------------------------
-    # Model Selection
+    # MODEL SELECTION
     # -----------------------------------
 
     if request.model.lower() == "prophet":
 
         result = run_prophet(
-
             df,
-
             forecast_days
         )
 
     else:
 
         result = run_linear_regression(
-
             df,
-
             forecast_days
         )
 
     # -----------------------------------
-    # Top Products
+    # TOP PRODUCTS
     # -----------------------------------
 
     top_products = top_products_analytics(
@@ -150,7 +157,7 @@ def generate_forecast(
     )
 
     # -----------------------------------
-    # Save Forecast History
+    # SAVE FORECAST HISTORY
     # -----------------------------------
 
     history = ForecastHistory(
@@ -164,7 +171,6 @@ def generate_forecast(
             result[
                 "forecast_predictions"
             ]
-
         ),
 
         user_id=current_user.id,
@@ -176,8 +182,19 @@ def generate_forecast(
 
     db.commit()
 
+    create_activity(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        activity_type="Forecast Generated",
+
+        description=f"{current_user.username} generated {request.model} forecast"
+    )
+
     # -----------------------------------
-    # Notification
+    # NOTIFICATION
     # -----------------------------------
 
     create_notification(
@@ -209,7 +226,7 @@ def generate_forecast(
 
         "top_products":
             top_products,
-        
+
         "product_categories":
             result.get(
                 "product_categories",

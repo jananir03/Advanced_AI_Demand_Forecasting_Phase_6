@@ -6,7 +6,8 @@ import {
 
 import {
 
-  useState
+  useState,
+  useEffect
 
 } from "react";
 
@@ -16,35 +17,87 @@ import {
 
 } from "react-router-dom";
 
+import API from "../services/api";
+
 
 const Navbar = () => {
 
   const navigate =
     useNavigate();
 
+  const [
 
-  const [showNotifications,
+    showNotifications,
 
-    setShowNotifications] =
+    setShowNotifications
 
-    useState(false);
+  ] = useState(false);
+
+  const [
+
+    notifications,
+
+    setNotifications
+
+  ] = useState([]);
 
 
-  const notifications =
+  // -----------------------------------
+  // FETCH ACTIVITIES
+  // -----------------------------------
 
-    JSON.parse(
+  const fetchNotifications = async () => {
 
-      localStorage.getItem(
-        "forecast_history"
-      )
+    try {
 
-    ) || [];
+      const response = await API.get(
+        "/activities/recent"
+      );
 
+      setNotifications(
+        response.data
+      );
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
+
+
+  useEffect(() => {
+
+    fetchNotifications();
+
+    // AUTO REFRESH
+
+    const interval = setInterval(() => {
+
+      fetchNotifications();
+
+    }, 3000);
+
+    return () => clearInterval(interval);
+
+  }, []);
+
+
+  // -----------------------------------
+  // LOGOUT
+  // -----------------------------------
 
   const handleLogout = () => {
 
     localStorage.removeItem(
       "token"
+    );
+
+    localStorage.removeItem(
+      "role"
+    );
+
+    localStorage.removeItem(
+      "username"
     );
 
     navigate("/login");
@@ -53,20 +106,20 @@ const Navbar = () => {
 
   return (
 
-    <div className="relative z-[9999] bg-white/70 backdrop-blur-md border-b border-white/30 shadow-sm px-8 py-5 flex justify-between items-center">
+    <div className="relative z-[9999] bg-white/70 dark:bg-slate-900 backdrop-blur-md border-b border-white/30 dark:border-slate-700 shadow-sm px-8 py-5 flex justify-between items-center">
 
 
-      {/* Title */}
+      {/* LEFT */}
 
       <div>
 
-        <h2 className="text-3xl font-bold text-gray-800">
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
 
           Dashboard
 
         </h2>
 
-        <p className="text-gray-500 mt-1">
+        <p className="text-gray-500 dark:text-gray-300 mt-1">
 
           Welcome back to your AI analytics platform
 
@@ -75,17 +128,17 @@ const Navbar = () => {
       </div>
 
 
-      {/* Actions */}
+      {/* RIGHT */}
 
       <div className="flex items-center gap-5">
 
 
-        {/* Notification */}
+        {/* NOTIFICATION */}
 
         <div className="relative z-[9999]">
 
 
-          {/* Bell Button */}
+          {/* BELL */}
 
           <button
 
@@ -97,13 +150,13 @@ const Navbar = () => {
               )
             }
 
-            className="relative bg-white p-3 rounded-full shadow hover:scale-105 transition"
+            className="relative bg-white dark:bg-slate-800 p-3 rounded-full shadow hover:scale-105 transition"
           >
 
             <Bell className="text-blue-700" />
 
 
-            {/* Badge */}
+            {/* BADGE */}
 
             {
 
@@ -120,14 +173,16 @@ const Navbar = () => {
           </button>
 
 
-          {/* Dropdown */}
+          {/* DROPDOWN */}
 
           {
 
             showNotifications && (
 
-              <div className="absolute right-0 top-16 w-[350px] bg-white rounded-3xl shadow-2xl p-6 border border-slate-200 z-[99999]">
+              <div className="absolute right-0 top-16 w-[380px] bg-white rounded-3xl shadow-2xl p-6 border border-slate-200 z-[99999]">
 
+
+                {/* HEADER */}
 
                 <div className="flex items-center justify-between mb-6">
 
@@ -146,7 +201,9 @@ const Navbar = () => {
                 </div>
 
 
-                <div className="space-y-4 max-h-[350px] overflow-y-auto">
+                {/* LIST */}
+
+                <div className="space-y-4 max-h-[400px] overflow-y-auto">
 
 
                   {
@@ -161,24 +218,24 @@ const Navbar = () => {
 
                             key={index}
 
-                            className="bg-slate-100 rounded-2xl p-4"
+                            className="bg-slate-100 rounded-2xl p-4 border border-slate-200"
                           >
 
-                            <h3 className="font-bold text-slate-800">
+                            <h3 className="font-bold text-slate-800 text-lg">
 
-                              Forecast Generated
+                              {item.type}
 
                             </h3>
 
-                            <p className="text-slate-600 text-sm mt-1 break-words">
+                            <p className="text-slate-600 text-sm mt-2 break-words">
 
-                              {item.dataset}
+                              {item.description}
 
                             </p>
 
-                            <p className="text-slate-500 text-xs mt-2">
+                            <p className="text-slate-500 text-xs mt-3">
 
-                              {item.generated_at}
+                              {item.time}
 
                             </p>
 
@@ -205,7 +262,7 @@ const Navbar = () => {
         </div>
 
 
-        {/* Logout */}
+        {/* LOGOUT */}
 
         <button
 

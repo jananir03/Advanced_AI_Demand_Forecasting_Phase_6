@@ -1,36 +1,65 @@
+import {
+
+  useEffect,
+  useState
+
+} from "react";
+
 import MainLayout from "../layouts/MainLayout";
 
-const notifications = [
+import API from "../services/api";
 
-  {
-
-    title:
-      "Dataset Uploaded",
-
-    message:
-      "Supermarket dataset uploaded successfully."
-  },
-
-  {
-
-    title:
-      "Forecast Generated",
-
-    message:
-      "AI forecast generated using Prophet model."
-  },
-
-  {
-
-    title:
-      "Revenue Forecast Ready",
-
-    message:
-      "Revenue forecasting completed successfully."
-  }
-];
 
 const Notifications = () => {
+
+  const [
+
+    notifications,
+
+    setNotifications
+
+  ] = useState([]);
+
+
+  // -----------------------------------
+  // FETCH NOTIFICATIONS
+  // -----------------------------------
+
+  const fetchNotifications = async () => {
+
+    try {
+
+      const response = await API.get(
+        "/activities/recent"
+      );
+
+      setNotifications(
+        response.data
+      );
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
+
+
+  useEffect(() => {
+
+    fetchNotifications();
+
+    // AUTO REFRESH
+
+    const interval = setInterval(() => {
+
+      fetchNotifications();
+
+    }, 3000);
+
+    return () => clearInterval(interval);
+
+  }, []);
+
 
   return (
 
@@ -39,7 +68,7 @@ const Notifications = () => {
       <div className="min-h-screen relative overflow-hidden p-8">
 
 
-        {/* Background */}
+        {/* BACKGROUND */}
 
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-sky-400 to-indigo-300"></div>
 
@@ -48,13 +77,12 @@ const Notifications = () => {
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl"></div>
 
 
-
-        {/* Content */}
+        {/* CONTENT */}
 
         <div className="relative z-10">
 
 
-          {/* Header */}
+          {/* HEADER */}
 
           <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/30">
 
@@ -66,45 +94,75 @@ const Notifications = () => {
 
             <p className="text-slate-700 mt-4 text-lg">
 
-              Recent forecasting and system alerts.
+              Live system activities and updates.
 
             </p>
 
           </div>
 
 
-
-          {/* Notification Cards */}
+          {/* NOTIFICATIONS */}
 
           <div className="mt-10 space-y-6">
 
             {
 
-              notifications.map(
+              notifications.length > 0 ? (
 
-                (item, index) => (
+                notifications.map(
 
-                  <div
+                  (item, index) => (
 
-                    key={index}
+                    <div
 
-                    className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/30"
-                  >
+                      key={index}
 
-                    <h2 className="text-2xl font-bold text-slate-800 mb-3">
+                      className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/30"
+                    >
 
-                      {item.title}
+                      <div className="flex items-center justify-between mb-4">
 
-                    </h2>
+                        <h2 className="text-2xl font-bold text-slate-800">
 
-                    <p className="text-slate-700 text-lg">
+                          {item.type}
 
-                      {item.message}
+                        </h2>
 
-                    </p>
+                        <span className="bg-green-100 text-green-700 px-4 py-2 rounded-xl text-sm font-semibold">
 
-                  </div>
+                          Live
+
+                        </span>
+
+                      </div>
+
+                      <p className="text-slate-700 text-lg">
+
+                        {item.description}
+
+                      </p>
+
+                      <p className="text-slate-600 text-sm mt-4">
+
+                        {item.time}
+
+                      </p>
+
+                    </div>
+                  )
                 )
+
+              ) : (
+
+                <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/30">
+
+                  <p className="text-slate-700 text-lg">
+
+                    No notifications available.
+
+                  </p>
+
+                </div>
               )
             }
 

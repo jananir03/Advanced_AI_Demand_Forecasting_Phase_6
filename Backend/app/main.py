@@ -35,6 +35,8 @@ from app.routers.report import  (
     router as report_router
 )
 
+from app.routers.activity import router as activity_router
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Advanced AI Demand Forecasting")
@@ -61,6 +63,7 @@ app.include_router(dashboard_router)
 app.include_router(notification_router)
 app.include_router(admin_router)
 app.include_router(report_router)
+app.include_router(activity_router)
 
 @app.get("/")
 def root():
