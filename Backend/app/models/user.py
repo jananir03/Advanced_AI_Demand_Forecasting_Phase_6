@@ -43,6 +43,11 @@ class User(Base):
         default="viewer"
     )
 
+    is_active = Column(
+    String(20),
+    default="active"
+    )
+    
     created_at = Column(
         DateTime,
         default=datetime.utcnow

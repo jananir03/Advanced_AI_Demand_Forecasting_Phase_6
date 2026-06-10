@@ -660,6 +660,12 @@ const Forecast = () => {
 
                   </option>
 
+                  <option>
+
+                    XGBoost
+
+                  </option>
+
                 </select>
 
               </div>

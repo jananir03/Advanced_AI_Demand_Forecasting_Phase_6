@@ -26,6 +26,10 @@ import Reports from "../pages/Reports";
 
 import Notifications from "../pages/Notifications";
 
+import Integrations from "../pages/Integrations";
+
+import AIFeatures from "../pages/AIFeatures";
+
 // -----------------------------------
 // Protected Route
 // -----------------------------------
@@ -158,6 +162,16 @@ const AppRoutes = () => {
 
           element={<Notifications />}
 
+        />
+
+        <Route
+          path="/ai-features"
+          element={<AIFeatures />}
+        />
+
+        <Route
+          path="/integrations"
+          element={<Integrations />}
         />
         
         {/* Admin */}

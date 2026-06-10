@@ -1,0 +1,151 @@
+date,product,category,region,sales,quantity
+07-04-2025,concealer,Skincare,North,4408,9
+01-04-2025,paracetamol,Medicines,North,1714,6
+22-01-2025,iron,Supplements,North,2106,5
+20-04-2025,magnesium ,Supplements,East,3070,6
+11-03-2025,hyaluronic acid,Skincare,South,3510,20
+04-04-2025,paracetamol,Medicines,North,4058,18
+19-04-2025,biotin,Supplements,South,1350,19
+18-01-2025,essential oils,Wellness,North,935,9
+09-05-2025,azithromycin,Medicines,South,4699,14
+11-05-2025,meditation cusions,Wellness,West,3961,20
+22-02-2025,meditation cusions,Wellness,East,2549,2
+09-01-2025,biotin,Supplements,West,3215,18
+31-03-2025,hyaluronic acid,Skincare,West,4017,8
+01-06-2025,concealer,Skincare,North,1105,14
+19-05-2025,neo mercazole,Medicines,South,991,17
+26-01-2025,vitamin c serum,Skincare,North,4718,4
+27-06-2025,neo mercazole,Medicines,West,3748,6
+02-06-2025,essential oils,Wellness,East,4962,18
+30-06-2025,iron,Supplements,South,4829,4
+30-03-2025,vitamin c serum,Skincare,South,3072,10
+12-04-2025,iron,Supplements,West,4628,13
+31-01-2025,paracetamol,Medicines,East,2481,11
+28-06-2025,magnesium ,Supplements,South,2304,7
+09-01-2025,meditation cusions,Wellness,South,4405,3
+03-03-2025,meditation cusions,Wellness,East,4152,17
+27-05-2025,essential oils,Wellness,East,1084,5
+03-04-2025,essential oils,Wellness,South,2735,17
+05-04-2025,azithromycin,Medicines,North,1197,2
+21-03-2025,herbal tea,Wellness,South,2487,2
+04-03-2025,azithromycin,Medicines,West,2192,12
+08-06-2025,neo mercazole,Medicines,South,4944,16
+23-04-2025,thyroxin,Medicines,West,2299,18
+22-01-2025,herbal tea,Wellness,North,1736,7
+19-02-2025,thyroxin,Medicines,North,2271,6
+03-01-2025,salicylic acid,Skincare,South,643,6
+03-03-2025,salicylic acid,Skincare,West,3265,19
+13-03-2025,biotin,Supplements,East,3855,13
+03-02-2025,thyroxin,Medicines,North,644,2
+05-03-2025,meditation cusions,Wellness,East,558,15
+13-05-2025,meditation cusions,Wellness,West,1650,10
+08-02-2025,niacinamide,Skincare,West,4106,18
+14-06-2025,calcium,Supplements,South,1802,19
+22-03-2025,niacinamide,Skincare,West,1580,3
+12-06-2025,essential oils,Wellness,South,3715,20
+20-02-2025,calcium,Supplements,North,1673,11
+05-01-2025,essential oils,Wellness,East,2447,13
+05-02-2025,concealer,Skincare,West,1285,12
+22-05-2025,herbal tea,Wellness,West,3963,12
+14-01-2025,herbal tea,Wellness,West,1106,8
+20-04-2025,calcium,Supplements,West,4799,12
+08-02-2025,calcium,Supplements,East,3602,19
+08-01-2025,paracetamol,Medicines,East,2317,7
+12-04-2025,meditation cusions,Wellness,South,773,20
+27-06-2025,hyaluronic acid,Skincare,East,518,14
+18-02-2025,azithromycin,Medicines,West,2103,15
+13-06-2025,hyaluronic acid,Skincare,South,2273,7
+18-01-2025,hyaluronic acid,Skincare,South,2782,7
+12-01-2025,salicylic acid,Wellness,West,2198,15
+18-01-2025,salicylic acid,Skincare,East,1439,17
+02-04-2025,biotin,Supplements,South,2426,7
+05-06-2025,paracetamol,Medicines,South,3165,14
+13-06-2025,essential oils,Wellness,West,818,12
+30-03-2025,thyroxin,Medicines,West,4989,6
+18-02-2025,essential oils,Wellness,North,785,10
+22-03-2025,iron,Supplements,East,3963,3
+09-06-2025,essential oils,Wellness,West,3026,2
+17-01-2025,vitamin c serum,Skincare,East,4764,10
+13-06-2025,herbal tea,Wellness,North,2577,1
+01-04-2025,magnesium ,Supplements,North,4288,8
+10-04-2025,azithromycin,Medicines,East,4494,7
+20-03-2025,iron,Supplements,North,2830,13
+05-01-2025,neo mercazole,Medicines,North,4054,13
+07-06-2025,calcium,Supplements,South,4266,19
+12-06-2025,neo mercazole,Medicines,North,4281,15
+13-03-2025,neo mercazole,Medicines,South,4163,3
+18-01-2025,neo mercazole,Medicines,North,2634,17
+24-01-2025,iron,Supplements,South,2955,11
+22-05-2025,neo mercazole,Medicines,North,2508,19
+23-06-2025,meditation cusions,Wellness,East,1697,17
+24-05-2025,herbal tea,Wellness,North,3572,10
+27-05-2025,calcium,Supplements,South,4971,5
+15-03-2025,concealer,Skincare,East,3229,16
+05-05-2025,magnesium ,Supplements,South,1378,5
+25-02-2025,magnesium ,Supplements,West,759,16
+11-03-2025,paracetamol,Medicines,West,753,20
+07-03-2025,hyaluronic acid,Skincare,West,649,19
+22-05-2025,paracetamol,Medicines,West,2402,1
+16-04-2025,vitamin c serum,Skincare,West,4072,9
+04-03-2025,iron,Supplements,South,801,7
+14-05-2025,magnesium ,Supplements,South,3600,9
+05-02-2025,salicylic acid,Skincare,East,3573,9
+02-02-2025,essential oils,Wellness,West,1577,2
+11-06-2025,azithromycin,Medicines,North,4297,15
+10-03-2025,neo mercazole,Medicines,West,2222,1
+24-05-2025,vitamin c serum,Skincare,North,531,20
+18-02-2025,hyaluronic acid,Skincare,North,4059,2
+13-06-2025,biotin,Supplements,East,4921,19
+19-05-2025,thyroxin,Medicines,South,2202,16
+21-05-2025,vitamin c serum,Skincare,South,3551,2
+13-04-2025,paracetamol,Medicines,East,4545,14
+17-05-2025,iron,Supplements,South,3907,3
+08-06-2025,essential oils,Wellness,East,4728,2
+28-06-2025,niacinamide,Skincare,North,3304,15
+21-03-2025,calcium,Supplements,North,2132,2
+12-02-2025,niacinamide,Skincare,North,4474,19
+15-02-2025,calcium,Supplements,North,2498,1
+09-06-2025,niacinamide,Skincare,North,1613,19
+23-02-2025,herbal tea,Wellness,East,2078,12
+28-05-2025,herbal tea,Wellness,North,4452,10
+28-01-2025,azithromycin,Medicines,South,1666,17
+09-06-2025,niacinamide,Skincare,East,3526,7
+26-03-2025,azithromycin,Medicines,East,3250,17
+07-03-2025,neo mercazole,Medicines,North,1216,11
+24-04-2025,thyroxin,Medicines,South,1440,17
+28-06-2025,calcium,Supplements,West,737,5
+27-05-2025,meditation cusions,Wellness,North,2377,14
+15-01-2025,azithromycin,Medicines,West,1260,4
+27-02-2025,neo mercazole,Medicines,West,2502,19
+14-06-2025,thyroxin,Wellness,South,1633,6
+24-04-2025,niacinamide,Skincare,West,2072,3
+25-03-2025,niacinamide,Skincare,East,606,12
+16-01-2025,paracetamol,Medicines,West,3948,10
+16-02-2025,herbal tea,Wellness,East,4680,17
+23-02-2025,calcium,Supplements,East,840,15
+23-02-2025,paracetamol,Medicines,South,715,4
+07-05-2025,meditation cusions,Wellness,South,4544,6
+26-03-2025,essential oils,Wellness,East,1871,7
+21-06-2025,salicylic acid,Skincare,West,2733,16
+14-05-2025,herbal tea,Wellness,North,4596,11
+02-06-2025,concealer,Skincare,East,4821,14
+11-02-2025,concealer,Skincare,South,575,6
+04-06-2025,biotin,Supplements,West,3284,16
+11-05-2025,herbal tea,Wellness,West,2704,1
+14-03-2025,vitamin c serum,Skincare,North,3504,3
+17-05-2025,iron,Supplements,East,3200,5
+14-05-2025,azithromycin,Medicines,North,4901,15
+07-05-2025,hyaluronic acid,Skincare,South,1916,8
+10-01-2025,meditation cusions,Wellness,East,790,7
+01-01-2025,magnesium ,Supplements,North,4355,16
+18-04-2025,salicylic acid,Skincare,East,3306,6
+30-05-2025,magnesium ,Supplements,South,2569,2
+09-04-2025,thyroxin,Medicines,South,4416,11
+06-02-2025,herbal tea,Wellness,East,983,11
+01-02-2025,magnesium ,Supplements,North,1477,3
+11-06-2025,azithromycin,Medicines,North,3459,20
+18-03-2025,herbal tea,Wellness,South,4607,1
+30-06-2025,essential oils,Skincare,South,3478,11
+19-04-2025,salicylic acid,Skincare,South,912,16
+16-02-2025,paracetamol,Medicines,West,2547,10
+27-01-2025,essential oils,Supplements,East,2568,8

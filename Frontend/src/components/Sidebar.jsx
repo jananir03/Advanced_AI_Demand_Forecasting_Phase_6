@@ -4,7 +4,9 @@ import {
   LineChart,
   FileText,
   Bell,
-  ShieldCheck
+  ShieldCheck,
+  BrainCircuit,
+  Plug
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
@@ -123,6 +125,21 @@ const Sidebar = () => {
           Reports
         </Link>
 
+        <Link
+          to="/ai-features"
+          className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+        >
+          <BrainCircuit size={22} />
+          AI Features
+          </Link>
+
+        <Link
+          to="/integrations"
+          className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+        >
+         <Plug size={22} />
+          Integrations
+          </Link>
         {/* Notifications */}
 
         <Link

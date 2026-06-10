@@ -31,6 +31,10 @@ from app.services.activity_service import (
     create_activity
 )
 
+from app.services.dataset_processor_service import (
+    generate_dataset_summary
+)
+
 router = APIRouter(
     prefix="/datasets",
     tags=["Datasets"]
@@ -48,6 +52,7 @@ async def upload_dataset(
         get_current_user
     )
 ):
+    
 
     if not file.filename.endswith(
         (".csv", ".xlsx")
@@ -92,6 +97,10 @@ async def upload_dataset(
 
     df, missing_values, duplicates_removed = (
         clean_dataset(df)
+    )
+
+    dataset_summary = (
+        generate_dataset_summary(df)
     )
 
     dataset = Dataset(
@@ -191,7 +200,11 @@ async def upload_dataset(
             int(missing_values),
 
         "duplicates_removed":
-            int(duplicates_removed)
+            int(duplicates_removed),
+        
+        "dataset_summary":
+            dataset_summary
+        
     }
 
 # -----------------------------------

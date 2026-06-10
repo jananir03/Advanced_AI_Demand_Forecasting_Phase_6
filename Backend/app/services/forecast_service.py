@@ -6,6 +6,8 @@ from sklearn.linear_model import LinearRegression
 
 from sklearn.ensemble import RandomForestRegressor
 
+from xgboost import XGBRegressor
+
 import numpy as np
 
 
@@ -339,6 +341,115 @@ def run_random_forest(
 
 
 # -----------------------------------
+# XGBoost Forecast
+# -----------------------------------
+
+def run_xgboost(
+
+    df,
+
+    forecast_days=7
+):
+
+    df = df.copy()
+
+    df.columns = [
+
+        col.lower().strip()
+
+        for col in df.columns
+    ]
+
+    if "sales" in df.columns:
+
+        sales_col = "sales"
+
+    elif "sales_amount" in df.columns:
+
+        sales_col = "sales_amount"
+
+    elif "total" in df.columns:
+
+        sales_col = "total"
+
+    else:
+
+        raise Exception(
+            "Sales column not found"
+        )
+
+    df = df.reset_index()
+
+    X = np.array(
+        df.index
+    ).reshape(-1, 1)
+
+    y = df[sales_col].values
+
+    model = XGBRegressor(
+
+        n_estimators=100,
+
+        learning_rate=0.1,
+
+        max_depth=5,
+
+        random_state=42
+    )
+
+    model.fit(X, y)
+
+    future_X = np.array(
+
+        range(
+            len(df),
+            len(df) + forecast_days
+        )
+
+    ).reshape(-1, 1)
+
+    predictions = model.predict(
+        future_X
+    )
+
+    forecast_predictions = []
+
+    revenue_predictions = []
+
+    for i, pred in enumerate(predictions):
+
+        value = round(
+            float(pred),
+            2
+        )
+
+        forecast_predictions.append({
+
+            "date": f"Day {i+1}",
+
+            "predicted_sales":
+                value
+        })
+
+        revenue_predictions.append({
+
+            "date": f"Day {i+1}",
+
+            "predicted_revenue":
+                round(value * 1.75, 2)
+        })
+
+    return {
+
+        "forecast_predictions":
+            forecast_predictions,
+
+        "revenue_predictions":
+            revenue_predictions
+    }
+
+
+# -----------------------------------
 # Top Products Analytics
 # -----------------------------------
 
@@ -452,9 +563,24 @@ def generate_forecast(
             forecast_days
         )
 
-    elif model_name.lower() == "random forest":
+    elif model_name.lower() in [
+
+        "random forest",
+
+        "random_forest"
+
+    ]:
 
         forecast_result = run_random_forest(
+
+            df,
+
+            forecast_days
+        )
+
+    elif model_name.lower() == "xgboost":
+
+        forecast_result = run_xgboost(
 
             df,
 
@@ -470,10 +596,8 @@ def generate_forecast(
             forecast_days
         )
 
-    top_products = top_products_analytics(
-        df
-    )
-
+    top_products = top_products_analytics(df)
+    
     # -----------------------------------
     # Dynamic Product Categories
     # -----------------------------------

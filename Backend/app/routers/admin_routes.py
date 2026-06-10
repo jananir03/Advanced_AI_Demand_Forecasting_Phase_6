@@ -27,6 +27,10 @@ from app.core.auth import (
     get_current_user
 )
 
+from app.services.activity_service import (
+    create_activity
+)
+
 router = APIRouter(
 
     prefix="/admin",
@@ -48,6 +52,17 @@ def admin_summary(
         get_current_user
     )
 ):
+
+    create_activity(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        activity_type="Admin Audit",
+
+        description="Viewed admin summary"
+    )
 
     total_users = db.query(
         User
@@ -80,7 +95,6 @@ def admin_summary(
             total_notifications
     }
 
-
 # -----------------------------------
 # Get All Users
 # -----------------------------------
@@ -98,6 +112,17 @@ def get_all_users(
         get_current_user
     )
 ):
+
+    create_activity(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        activity_type="Admin Audit",
+
+        description="Viewed all users"
+    )
 
     offset = (page - 1) * limit
 
@@ -129,7 +154,6 @@ def get_all_users(
 
     return result
 
-
 # -----------------------------------
 # Get All Datasets
 # -----------------------------------
@@ -148,6 +172,17 @@ def get_all_datasets(
     )
 ):
 
+    create_activity(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        activity_type="Admin Audit",
+
+        description="Viewed all datasets"
+    )
+
     offset = (page - 1) * limit
 
     datasets = db.query(
@@ -164,10 +199,10 @@ def get_all_datasets(
                 dataset.id,
 
             "dataset_name":
-                dataset.file_name,
+                dataset.dataset_name,
 
             "total_records":
-                dataset.row_count,
+                dataset.total_records,
 
             "upload_date":
                 dataset.upload_date
@@ -193,6 +228,17 @@ def get_forecasts(
         get_current_user
     )
 ):
+
+    create_activity(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        activity_type="Admin Audit",
+
+        description="Viewed forecast activities"
+    )
 
     offset = (page - 1) * limit
 
@@ -221,7 +267,6 @@ def get_forecasts(
 
     return result
 
-
 # -----------------------------------
 # Recent Activities
 # -----------------------------------
@@ -239,6 +284,17 @@ def recent_activities(
         get_current_user
     )
 ):
+
+    create_activity(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        activity_type="Admin Audit",
+
+        description="Viewed recent activities"
+    )
 
     offset = (page - 1) * limit
 

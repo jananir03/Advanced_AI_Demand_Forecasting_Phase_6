@@ -41,6 +41,10 @@ from app.services.forecast_service import (
 
     run_prophet,
 
+    run_random_forest,
+
+    run_xgboost,
+
     top_products_analytics
 )
 
@@ -133,10 +137,29 @@ def generate_forecast(
     # -----------------------------------
     # MODEL SELECTION
     # -----------------------------------
-
     if request.model.lower() == "prophet":
 
         result = run_prophet(
+            df,
+            forecast_days
+        )
+
+    elif request.model.lower() in [
+
+        "random forest",
+
+        "random_forest"
+
+    ]:
+
+        result = run_random_forest(
+            df,
+            forecast_days
+        )
+
+    elif request.model.lower() == "xgboost":
+
+        result = run_xgboost(
             df,
             forecast_days
         )
@@ -147,7 +170,7 @@ def generate_forecast(
             df,
             forecast_days
         )
-
+  
     # -----------------------------------
     # TOP PRODUCTS
     # -----------------------------------

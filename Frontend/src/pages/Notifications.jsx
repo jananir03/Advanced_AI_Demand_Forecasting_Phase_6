@@ -168,11 +168,131 @@ const Notifications = () => {
 
           </div>
 
+          {/* ----------------------------------- */}
+          {/* NOTIFICATION ENHANCEMENTS */}
+          {/* ----------------------------------- */}
+
+          <div className="mt-12">
+
+            <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/30">
+
+              <h2 className="text-3xl font-bold text-slate-800 mb-8">
+
+                Notification Enhancements
+
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <h3 className="text-xl font-bold text-slate-800">
+
+                    Email Notifications
+
+                  </h3>
+
+                  <p className="text-slate-700 mt-2">
+
+                    Automated email delivery for important system events.
+
+                  </p>
+
+                </div>
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <h3 className="text-xl font-bold text-slate-800">
+
+                    Alert Settings
+
+                  </h3>
+
+                  <p className="text-slate-700 mt-2">
+
+                    Configure notification preferences and alert thresholds.
+
+                  </p>
+
+                </div>
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <h3 className="text-xl font-bold text-slate-800">
+
+                    Threshold Alerts
+
+                  </h3>
+
+                  <p className="text-slate-700 mt-2">
+
+                    Receive alerts when forecast or revenue thresholds are exceeded.
+
+                  </p>
+
+                </div>
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <h3 className="text-xl font-bold text-slate-800">
+
+                    Forecast Failure Alerts
+
+                  </h3>
+
+                  <p className="text-slate-700 mt-2">
+
+                    Automatic notifications for forecast generation failures.
+
+                  </p>
+
+                </div>
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <h3 className="text-xl font-bold text-slate-800">
+
+                    Report Completion Alerts
+
+                  </h3>
+
+                  <p className="text-slate-700 mt-2">
+
+                    Alerts generated when reports are successfully completed.
+
+                  </p>
+
+                </div>
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <h3 className="text-xl font-bold text-slate-800">
+
+                    Real-Time Monitoring
+
+                  </h3>
+
+                  <p className="text-slate-700 mt-2">
+
+                    Continuous monitoring of activities, forecasts and system events.
+
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
 
       </div>
 
     </MainLayout>
+
+        
   );
 };
 
