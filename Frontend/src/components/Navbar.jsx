@@ -51,7 +51,7 @@ const Navbar = () => {
     try {
 
       const response = await API.get(
-        "/activities/recent"
+        "/notifications"
       );
 
       setNotifications(
@@ -223,19 +223,22 @@ const Navbar = () => {
 
                             <h3 className="font-bold text-slate-800 text-lg">
 
-                              {item.type}
+                              {item.title}
 
                             </h3>
 
                             <p className="text-slate-600 text-sm mt-2 break-words">
 
-                              {item.description}
+                              {item.message}
 
                             </p>
 
                             <p className="text-slate-500 text-xs mt-3">
 
-                              {item.time}
+                              {new Date(
+                                item.created_at
+                              ).toLocaleString()
+                              }
 
                             </p>
 

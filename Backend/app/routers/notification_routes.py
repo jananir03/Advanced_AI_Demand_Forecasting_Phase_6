@@ -135,3 +135,30 @@ def mark_notification_as_read(
         "message":
             "Notification marked as read"
     }
+
+@router.get("/unread-count")
+def unread_count(
+
+    db: Session = Depends(get_db),
+
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    count = db.query(
+        Notification
+    ).filter(
+
+        Notification.user_id ==
+        current_user.id,
+
+        Notification.is_read ==
+        False
+
+    ).count()
+
+    return {
+
+        "count": count
+    }

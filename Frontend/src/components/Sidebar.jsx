@@ -6,10 +6,15 @@ import {
   Bell,
   ShieldCheck,
   BrainCircuit,
-  Plug
+  Plug,
+  CalendarClock,
+  Users,
+  GitBranch,
+  Briefcase,
+  BarChart3
 } from "lucide-react";
 
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
 
@@ -20,6 +25,14 @@ const Sidebar = () => {
   const role = localStorage.getItem(
     "role"
   );
+
+  const menuClass = ({ isActive }) =>
+  `flex items-center gap-4 px-5 py-4 rounded-2xl transition duration-300 font-medium ${
+    isActive
+      ? "bg-blue-600 to indigo-600 text-white shadow-lg"
+      : "hover:bg-white/10"
+  }`;
+  
 
   return (
 
@@ -75,15 +88,32 @@ const Sidebar = () => {
 
       <nav className="relative z-10 space-y-3">
 
+        <NavLink
+          to="/executive-dashboard"
+          className={menuClass}
+        >
+          <BarChart3 size={22} />
+          Executive Dashboard
+        </NavLink>
+
         {/* Dashboard */}
 
-        <Link
+        <NavLink
           to="/dashboard"
-          className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+          className={menuClass}
         >
           <LayoutDashboard size={22} />
           Dashboard
-        </Link>
+        </NavLink>
+
+        <NavLink
+          to="/scenario-planning"
+          className={menuClass}
+        >
+          <GitBranch size={22} />
+          What-If Analysis
+        </NavLink>
+
 
         {/* Upload Dataset */}
 
@@ -91,13 +121,13 @@ const Sidebar = () => {
 
           role === "analyst") && (
 
-          <Link
+          <NavLink
             to="/upload"
-            className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+            className={menuClass}
           >
             <Upload size={22} />
             Upload Dataset
-          </Link>
+          </NavLink>
         )}
 
         {/* Forecast */}
@@ -106,61 +136,93 @@ const Sidebar = () => {
 
           role === "analyst") && (
 
-          <Link
+          <NavLink
             to="/forecast"
-            className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+            className={menuClass}
           >
             <LineChart size={22} />
             Forecast
-          </Link>
+          </NavLink>
+        )}
+
+        {(role === "super_admin" ||
+
+          role === "analyst") && (
+
+        <NavLink
+          to="/forecast-scheduler"
+          className={menuClass}
+        >
+            <CalendarClock size={22} />
+            Forecast Scheduler
+          </NavLink>
         )}
 
         {/* Reports */}
 
-        <Link
+        <NavLink
           to="/reports"
-          className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+          className={menuClass}
         >
           <FileText size={22} />
           Reports
-        </Link>
+        </NavLink>
 
-        <Link
+        <NavLink
           to="/ai-features"
-          className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+          className={menuClass}
         >
           <BrainCircuit size={22} />
           AI Features
-          </Link>
+        </NavLink>
 
-        <Link
+        <NavLink
           to="/integrations"
-          className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+          className={menuClass}
         >
          <Plug size={22} />
           Integrations
-          </Link>
+        </NavLink>
+
+        <NavLink
+          to="/forecast-workspace"
+          className={menuClass}
+        >
+         <Briefcase size={22} />
+          Forecast Workspaces
+        </NavLink>
+
+
+          
         {/* Notifications */}
 
-        <Link
+        <NavLink
           to="/notifications"
-          className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+          className={menuClass}
         >
           <Bell size={22} />
           Notifications
-        </Link>
+        </NavLink>
+
+        <NavLink
+          to="/user-management"
+          className={menuClass}
+        >
+          <Users size={22} />
+          User Management
+        </NavLink>
 
         {/* Admin */}
 
         {role === "super_admin" && (
 
-          <Link
+          <NavLink
             to="/admin"
-            className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition duration-300 font-medium"
+            className={menuClass}
           >
             <ShieldCheck size={22} />
             Admin
-          </Link>
+          </NavLink>
         )}
 
       </nav>

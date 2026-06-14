@@ -57,6 +57,62 @@ from app.routers.notification_enhancements import (
     router as notification_enhancements_router
 )
 
+from app.models.forecast_workspace import (
+    ForecastWorkspace
+)
+
+from app.routers.forecast_workspace import (
+    router as forecast_workspace_router
+)
+
+from app.models.scenario_analysis import (
+    ScenarioAnalysis
+)
+
+from app.routers.scenario_analysis import (
+    router as scenario_analysis_router
+)
+
+from app.routers.executive_dashboard import (
+    router as executive_dashboard_router
+)
+
+from app.routers.ai_insights import (
+    router as ai_insights_router
+)
+
+from app.models.forecast_comment import (
+    ForecastComment
+)
+
+from app.models.dataset_version import (
+    DatasetVersion
+)
+
+from app.routers.forecast_collaboration import (
+    router as forecast_collaboration_router
+)
+
+from app.routers.dataset_versioning import (
+    router as dataset_versioning_router
+)
+
+from app.models.executive_report import (
+    ExecutiveReport
+)
+
+from app.routers.executive_reporting import (
+    router as executive_reporting_router
+)
+
+from app.routers.activity_logs import (
+    router as activity_log_router
+)
+
+from app.routers.scenario_routes import (
+     router as scenario_router
+)
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Advanced AI Demand Forecasting")
@@ -105,6 +161,24 @@ app.include_router(integration_router)
 app.include_router(user_management_router)
 
 app.include_router(notification_enhancements_router)
+
+app.include_router(forecast_workspace_router)
+
+app.include_router(scenario_analysis_router)
+
+app.include_router(executive_dashboard_router)
+
+app.include_router(ai_insights_router)
+
+app.include_router(forecast_collaboration_router)
+
+app.include_router(dataset_versioning_router)
+
+app.include_router(executive_reporting_router)
+
+app.include_router(activity_log_router)
+
+app.include_router(scenario_router)
 
 @app.get("/")
 def root():

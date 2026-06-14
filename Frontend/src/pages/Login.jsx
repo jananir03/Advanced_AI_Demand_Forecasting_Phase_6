@@ -1,5 +1,10 @@
 import { useState } from "react";
 
+import {
+  Eye,
+  EyeOff
+} from "lucide-react";
+
 import { useNavigate, Link } from "react-router-dom";
 
 import API from "../services/api";
@@ -16,6 +21,10 @@ const Login = () => {
   });
 
   const [error, setError] = useState("");
+
+  const [showPassword,
+    setShowPassword] =
+    useState(false);
 
   const handleChange = (e) => {
 
@@ -198,18 +207,61 @@ const Login = () => {
               onChange={handleChange}
             />
 
-            <input
+            <div className="relative mb-8">
 
-              type="password"
+              <input
 
-              name="password"
+                type={
+                  showPassword
+                    ? "text"
+                    : "password"
+                }
 
-              placeholder="Password"
+                name="password"
 
-              className="w-full border border-slate-200 rounded-2xl p-5 text-lg mb-8 outline-none focus:ring-4 focus:ring-blue-200"
+                placeholder="Password"
 
-              onChange={handleChange}
-            />
+                className="w-full border border-slate-200 rounded-2xl p-5 pr-14 text-lg outline-none focus:ring-4 focus:ring-blue-200"
+
+                onChange={handleChange}
+              />
+
+              <button
+
+                type="button"
+
+                onClick={() =>
+                  setShowPassword(
+                    !showPassword
+                  )
+                }
+
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500"
+              >
+
+                {
+
+                  showPassword
+
+                    ? <EyeOff size={22} />
+
+                    : <Eye size={22} />
+                }
+
+              </button>
+
+            </div>
+
+            <div className="flex justify-end mb-6">
+
+              <Link
+                to="/forgot-password"
+                className="text-blue-600 hover:underline font-medium"
+              >
+                Forgot Password?
+              </Link>
+
+            </div>
 
             <button
 

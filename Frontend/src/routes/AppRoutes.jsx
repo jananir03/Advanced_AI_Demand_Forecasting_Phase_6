@@ -30,6 +30,18 @@ import Integrations from "../pages/Integrations";
 
 import AIFeatures from "../pages/AIFeatures";
 
+import ForecastScheduler from "../pages/ForecastScheduler";
+
+import ForgotPassword from "../pages/ForgotPassword";
+
+import UserManagement from "../pages/UserManagement";
+
+import ScenarioPlanning from "../pages/ScenarioPlanning";
+
+import ForecastWorkspace from "../pages/ForecastWorkspace";
+
+import ExecutiveDashboard from "../pages/ExecutiveDashboard";
+
 // -----------------------------------
 // Protected Route
 // -----------------------------------
@@ -173,12 +185,57 @@ const AppRoutes = () => {
           path="/integrations"
           element={<Integrations />}
         />
+
+        <Route
+          path="/forecast-scheduler"
+          element={
+          <ProtectedRoute>
+            <ForecastScheduler />
+          </ProtectedRoute>
+          }
+        />
         
         {/* Admin */}
 
         <Route
           path="/admin"
           element={<Admin />}
+        />
+
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+        <Route
+          path="/user-management"
+          element={
+            <ProtectedRoute>
+              <UserManagement />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+
+          path="/scenario-planning"
+
+          element={<ScenarioPlanning />}
+
+        />
+
+        <Route
+
+          path="/forecast-workspace"
+
+          element={
+            <ForecastWorkspace />
+          }
+        />
+
+        <Route
+          path="/executive-dashboard"
+          element={<ExecutiveDashboard />}
         />
 
       </Routes>

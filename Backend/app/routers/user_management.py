@@ -25,6 +25,13 @@ from app.core.security import (
     hash_password
 )
 
+from app.schemas.user_schema import UserCreate
+
+
+from app.core.permissions import (
+    require_roles
+)
+
 router = APIRouter(
 
     prefix="/user-management",
@@ -159,4 +166,236 @@ def toggle_status(
 
         "status":
             user.is_active
+    }
+
+# -----------------------------------
+# GET ALL USERS
+# -----------------------------------
+
+@router.get("/users")
+def get_all_users(
+
+    db: Session = Depends(get_db),
+
+    current_user: User = Depends(
+
+        require_roles([
+            "super_admin"
+        ])
+    )
+):
+
+    users = db.query(
+        User
+    ).all()
+
+    result = []
+
+    for user in users:
+
+        result.append({
+
+            "id":
+                user.id,
+
+            "username":
+                user.username,
+
+            "email":
+                user.email,
+
+            "role":
+                user.role,
+
+            "status":
+                user.is_active
+        })
+
+    return result
+
+# -----------------------------------
+# CREATE USER
+# -----------------------------------
+
+@router.post("/users")
+def create_user(
+
+    payload: UserCreate,
+
+    db: Session = Depends(get_db),
+
+    current_user: User = Depends(
+
+        require_roles([
+            "super_admin"
+        ])
+    )
+):
+
+    existing_user = db.query(
+        User
+    ).filter(
+
+        User.username ==
+        payload.username
+
+    ).first()
+
+    if existing_user:
+
+        raise HTTPException(
+
+            status_code=400,
+
+            detail="Username already exists"
+        )
+
+    new_user = User(
+
+        username=
+            payload.username,
+
+        email=
+            payload.email,
+
+        password=
+            hash_password(
+                payload.password
+            ),
+
+        role=
+            payload.role,
+
+        is_active=
+            "active"
+    )
+
+    db.add(
+        new_user
+    )
+
+    db.commit()
+
+    db.refresh(
+        new_user
+    )
+
+    return {
+
+        "message":
+            "User created successfully",
+
+        "user_id":
+            new_user.id
+    }
+
+
+@router.put("/users/{user_id}/toggle-status")
+def toggle_user_status(
+
+    user_id: int,
+
+    db: Session = Depends(get_db),
+
+    current_user: User = Depends(
+        require_roles(["super_admin"])
+    )
+):
+
+    user = db.query(User).filter(
+        User.id == user_id
+    ).first()
+
+    if not user:
+
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    if user.is_active == "active":
+
+        user.is_active = "inactive"
+
+    else:
+
+        user.is_active = "active"
+
+    db.commit()
+
+    db.refresh(user)
+
+    return {
+        "message": "Status updated",
+        "status": user.is_active
+    }
+# -----------------------------------
+# CHANGE ROLE
+# -----------------------------------
+
+@router.put(
+    "/users/{user_id}/role"
+)
+def change_role(
+
+    user_id: int,
+
+    role: str,
+
+    db: Session = Depends(get_db),
+
+    current_user: User = Depends(
+
+        require_roles([
+            "super_admin"
+        ])
+    )
+):
+
+    allowed_roles = [
+
+        "super_admin",
+
+        "analyst",
+
+        "viewer"
+    ]
+
+    if role not in allowed_roles:
+
+        raise HTTPException(
+
+            status_code=400,
+
+            detail="Invalid role"
+        )
+
+    user = db.query(
+        User
+    ).filter(
+
+        User.id == user_id
+
+    ).first()
+
+    if not user:
+
+        raise HTTPException(
+
+            status_code=404,
+
+            detail="User not found"
+        )
+
+    user.role = role
+
+    db.commit()
+
+    return {
+
+        "message":
+            "Role updated successfully",
+
+        "role":
+            role
     }

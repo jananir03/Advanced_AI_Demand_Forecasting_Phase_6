@@ -1,12 +1,16 @@
 import {
-
   useEffect,
   useState
-
 } from "react";
 
-import MainLayout from "../layouts/MainLayout";
+import {
+  Bell,
+  Mail,
+  CheckCircle,
+  AlertTriangle
+} from "lucide-react";
 
+import MainLayout from "../layouts/MainLayout";
 import API from "../services/api";
 
 
@@ -20,6 +24,89 @@ const Notifications = () => {
 
   ] = useState([]);
 
+  const [filter, setFilter] =
+  useState("all");
+  
+  const filteredNotifications =
+
+    filter === "All"
+
+      ? notifications
+
+      : notifications.filter((item) => {
+
+          const title =
+            item.title?.toLowerCase() || "";
+
+          if (filter === "Forecast") {
+
+            return title.includes("forecast");
+
+          }
+
+          if (filter === "Integration") {
+
+            return title.includes("integration");
+
+          }
+
+          if (filter === "Email") {
+
+            return title.includes("email");
+
+          }
+
+          if (filter === "Security") {
+
+            return (
+              title.includes("login") ||
+              title.includes("security")
+            );
+
+          }
+
+          return true;
+        });
+
+
+  const [
+    stats,
+    setStats
+  ] = useState({
+
+    total: 0,
+
+    unread: 0,
+
+    read: 0,
+
+    emails: 0
+  });
+
+  const [
+
+    unreadCount,
+
+    setUnreadCount
+
+  ] = useState(0);
+
+  
+  
+  const [
+
+    settings,
+
+    setSettings
+
+  ] = useState({
+
+    email_enabled: true,
+
+    inventory_alert_enabled: true,
+
+    forecast_alert_enabled: true
+  });
 
   // -----------------------------------
   // FETCH NOTIFICATIONS
@@ -27,13 +114,98 @@ const Notifications = () => {
 
   const fetchNotifications = async () => {
 
+  try {
+
+    const response = await API.get(
+      "/notifications"
+    );
+
+    const data =
+      response.data || [];
+
+    setNotifications(data);
+
+    setStats({
+
+      total:
+        data.length,
+
+      unread:
+        data.filter(
+          item =>
+            !item.is_read
+        ).length,
+
+      read:
+        data.filter(
+          item =>
+            item.is_read
+        ).length,
+
+      emails:
+        data.filter(
+          item =>
+            item.title
+              ?.toLowerCase()
+              .includes(
+                "email"
+              )
+        ).length
+    });
+
+  } catch (error) {
+
+    console.log(error);
+  }
+};
+
+  const markAsRead = async (id) => {
+
+  try {
+
+    await API.put(
+
+      `/notifications/read/${id}`
+    );
+
+    fetchNotifications();
+
+  } catch (error) {
+
+    console.log(error);
+  }
+};
+  const fetchUnreadCount =
+  async () => {
+
     try {
 
-      const response = await API.get(
-        "/activities/recent"
+      const response =
+        await API.get(
+          "/notifications/unread-count"
+        );
+
+      setUnreadCount(
+        response.data.count
       );
 
-      setNotifications(
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
+
+  const fetchSettings =
+  async () => {
+
+    try {
+
+      const response =
+        await API.get(
+          "/notification-enhancements/alert-settings"
+        );
+
+      setSettings(
         response.data
       );
 
@@ -43,16 +215,20 @@ const Notifications = () => {
     }
   };
 
-
   useEffect(() => {
 
     fetchNotifications();
+
+    fetchUnreadCount();
+    fetchSettings();
 
     // AUTO REFRESH
 
     const interval = setInterval(() => {
 
       fetchNotifications();
+
+      fetchUnreadCount();
 
     }, 3000);
 
@@ -88,7 +264,21 @@ const Notifications = () => {
 
             <h1 className="text-5xl font-bold text-slate-800">
 
-              Notifications
+              <div className="flex items-center gap-4">
+
+                <h1 className="text-5xl font-bold text-slate-800">
+
+                  Notifications
+
+                </h1>
+
+                <span className="bg-red-500 text-white px-4 py-2 rounded-full font-bold">
+
+                  {stats.total}
+
+                </span>
+
+              </div>
 
             </h1>
 
@@ -100,6 +290,168 @@ const Notifications = () => {
 
           </div>
 
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-xl">
+
+              <div className="flex items-center justify-between">
+
+                <h3 className="text-slate-700 font-semibold">
+
+                  Total Notifications
+
+                </h3>
+
+                <Bell size={28} />
+              </div>
+
+              <h1 className="text-5xl font-bold text-slate-800 mt-5">
+
+                {notifications.length}
+
+              </h1>
+
+            </div>
+
+            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-xl">
+
+              <div className="flex items-center justify-between">
+
+                <h3 className="text-slate-700 font-semibold">
+
+                  Unread
+
+                </h3>
+
+                <AlertTriangle
+                  size={28}
+                />
+              </div>
+
+              <h1 className="text-5xl font-bold text-red-600 mt-5">
+
+                {stats.unread}
+
+              </h1>
+
+            </div>
+
+            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-xl">
+
+              <div className="flex items-center justify-between">
+
+                <h3 className="text-slate-700 font-semibold">
+
+                  Read
+
+                </h3>
+
+                <CheckCircle
+                  size={28}
+                />
+              </div>
+
+              <h1 className="text-5xl font-bold text-green-600 mt-5">
+
+                {stats.read}
+
+              </h1>
+
+            </div>
+
+            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-xl">
+
+              <div className="flex items-center justify-between">
+
+                <h3 className="text-slate-700 font-semibold">
+
+                  Emails Sent
+
+                </h3>
+
+                <Mail size={28} />
+              </div>
+
+              <h1 className="text-5xl font-bold text-blue-600 mt-5">
+
+                {stats.emails}
+
+              </h1>
+
+            </div>
+
+          </div>
+
+          <div className="mt-10 flex flex-wrap gap-4">
+
+            {
+
+              [
+
+                "All",
+
+                "Email",
+
+                "Forecast",
+
+                "Integration",
+
+                "Security"
+
+              ].map(
+
+                (type) => (
+
+                  <button
+
+                    key={type}
+
+                    onClick={() =>
+                      setFilter(type)
+                    }
+
+                    className={`
+
+                      px-5 py-3 rounded-2xl font-semibold transition-all
+
+                      ${
+
+                        filter === type
+
+                          ? "bg-blue-600 text-white"
+
+                          : "bg-white/20 text-slate-800"
+
+                      }
+
+                    `}
+                  >
+
+                    {type}
+
+                  </button>
+                )
+              )
+            }
+
+          </div>
+          
+          <div className="mt-8 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-3xl p-8 text-white shadow-2xl">
+
+            <h2 className="text-3xl font-bold">
+
+              Notification Control Center
+
+            </h2>
+
+            <p className="mt-3 text-lg">
+
+              Monitor forecast alerts, integration updates,
+              email delivery status and system notifications.
+
+            </p>
+
+          </div>
 
           {/* NOTIFICATIONS */}
 
@@ -109,7 +461,7 @@ const Notifications = () => {
 
               notifications.length > 0 ? (
 
-                notifications.map(
+                filteredNotifications.map(
 
                   (item, index) => (
 
@@ -124,13 +476,37 @@ const Notifications = () => {
 
                         <h2 className="text-2xl font-bold text-slate-800">
 
-                          {item.type}
+                          {item.title}
 
                         </h2>
 
-                        <span className="bg-green-100 text-green-700 px-4 py-2 rounded-xl text-sm font-semibold">
+                        <span
 
-                          Live
+                          className={`
+
+                            px-4 py-2 rounded-xl text-sm font-semibold
+
+                            ${
+
+                              item.is_read
+
+                                ? "bg-green-100 text-green-700"
+
+                                : "bg-red-100 text-red-700"
+
+                            }
+
+                          `}
+                        >
+
+                          {
+
+                            item.is_read
+
+                              ? "Read"
+
+                              : "Unread"
+                          }
 
                         </span>
 
@@ -138,13 +514,41 @@ const Notifications = () => {
 
                       <p className="text-slate-700 text-lg">
 
-                        {item.description}
+                        {item.message}
 
                       </p>
 
+                      <div className="flex items-center gap-4 mt-4">
+
+                        {
+
+                          !item.is_read && (
+
+                            <button
+
+                              onClick={() =>
+
+                                markAsRead(
+                                  item.id
+                                )
+                              }
+
+                              className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-700"
+                            >
+
+                              Mark As Read
+
+                            </button>
+                          )
+                        }
+
+                      </div>
+
                       <p className="text-slate-600 text-sm mt-4">
 
-                        {item.time}
+                        {new Date(
+                          item.created_at
+                        ).toLocaleString()}
 
                       </p>
 
@@ -168,6 +572,223 @@ const Notifications = () => {
 
           </div>
 
+          {/* EMAIL DELIVERY CENTER */}
+
+          <div className="mt-12">
+
+            <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/30">
+
+              <h2 className="text-3xl font-bold text-slate-800 mb-8">
+
+                Email Delivery Center
+
+              </h2>
+
+              <div className="space-y-5">
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <div className="flex justify-between items-center">
+
+                    <div>
+
+                      <h3 className="text-xl font-bold text-slate-800">
+
+                        Forecast Report Generated
+
+                      </h3>
+
+                      <p className="text-slate-700 mt-2">
+
+                        Email sent to:
+
+                        <span className="font-semibold ml-2">
+
+                          admin@gmail.com
+
+                        </span>
+
+                      </p>
+
+                    </div>
+
+                    <span className="bg-green-100 text-green-700 px-4 py-2 rounded-xl font-semibold">
+
+                      Delivered
+
+                    </span>
+
+                  </div>
+
+                </div>
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <div className="flex justify-between items-center">
+
+                    <div>
+
+                      <h3 className="text-xl font-bold text-slate-800">
+
+                        Integration Created
+
+                      </h3>
+
+                      <p className="text-slate-700 mt-2">
+
+                        Email sent to:
+
+                        <span className="font-semibold ml-2">
+
+                          analytics@company.com
+
+                        </span>
+
+                      </p>
+
+                    </div>
+
+                    <span className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-xl font-semibold">
+
+                      Pending
+
+                    </span>
+
+                  </div>
+
+                </div>
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <div className="flex justify-between items-center">
+
+                    <div>
+
+                      <h3 className="text-xl font-bold text-slate-800">
+
+                        Revenue Alert
+
+                      </h3>
+
+                      <p className="text-slate-700 mt-2">
+
+                        Email sent to:
+
+                        <span className="font-semibold ml-2">
+
+                          finance@company.com
+
+                        </span>
+
+                      </p>
+
+                    </div>
+
+                    <span className="bg-red-100 text-red-700 px-4 py-2 rounded-xl font-semibold">
+
+                      Failed
+
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          {/* ALERT SETTINGS */}
+
+          <div className="mt-12">
+
+            <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/30">
+
+              <h2 className="text-3xl font-bold text-slate-800 mb-8">
+
+                Notification Settings
+
+              </h2>
+
+              <div className="grid md:grid-cols-3 gap-6">
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <h3 className="font-bold text-lg">
+
+                    Email Alerts
+
+                  </h3>
+
+                  <p className="mt-3 text-slate-700">
+
+                    {
+
+                      settings.email_enabled
+
+                        ? "Enabled"
+
+                        : "Disabled"
+                    }
+
+                  </p>
+
+                </div>
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <h3 className="font-bold text-lg">
+
+                    Forecast Alerts
+
+                  </h3>
+
+                  <p className="mt-3 text-slate-700">
+
+                    {
+
+                      settings.forecast_alert_enabled
+
+                        ? "Enabled"
+
+                        : "Disabled"
+                    }
+
+                  </p>
+
+                </div>
+
+                <div className="bg-white/30 rounded-2xl p-6">
+
+                  <h3 className="font-bold text-lg">
+
+                    Inventory Alerts
+
+                  </h3>
+
+                  <p className="mt-3 text-slate-700">
+
+                    {
+
+                      settings.inventory_alert_enabled
+
+                        ? "Enabled"
+
+                        : "Disabled"
+                    }
+
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
           {/* ----------------------------------- */}
           {/* NOTIFICATION ENHANCEMENTS */}
           {/* ----------------------------------- */}
@@ -194,7 +815,7 @@ const Notifications = () => {
 
                   <p className="text-slate-700 mt-2">
 
-                    Automated email delivery for important system events.
+                    Automated email delivery with delivery tracking and status monitoring.
 
                   </p>
 
@@ -268,7 +889,7 @@ const Notifications = () => {
 
                   <h3 className="text-xl font-bold text-slate-800">
 
-                    Real-Time Monitoring
+                    Live notification feed with unread tracking and alert management.
 
                   </h3>
 

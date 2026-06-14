@@ -19,6 +19,16 @@ from app.schemas.integration_schema import (
     IntegrationCreate
 )
 
+from app.services.notification_service import (
+    create_notification
+)
+
+from app.models.user import User
+
+from app.core.auth import (
+    get_current_user
+)
+
 router = APIRouter(
 
     prefix="/integrations",
@@ -31,9 +41,12 @@ def create_integration(
 
     payload: IntegrationCreate,
 
-    db: Session = Depends(get_db)
-):
+    db: Session = Depends(get_db),
 
+    current_user: User = Depends(
+        get_current_user
+    )
+):
     integration = Integration(
 
         name=payload.name,
@@ -58,6 +71,16 @@ def create_integration(
         integration
     )
 
+    create_notification(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        title="Integration Created",
+
+        message=f"{payload.name} integration created successfully"
+    )
     return integration
 
 @router.get("/")
