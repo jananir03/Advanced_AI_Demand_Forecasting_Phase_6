@@ -12,6 +12,16 @@ from app.models.forecast_workspace import (
     ForecastWorkspace
 )
 
+from app.services.notification_service import (
+    create_notification
+)
+
+from app.core.auth import (
+    get_current_user
+)
+
+from app.models.user import User
+
 router = APIRouter(
     prefix="/forecast-workspaces",
     tags=["Forecast Workspaces"]
@@ -21,7 +31,8 @@ router = APIRouter(
 @router.post("/create")
 def create_workspace(
     payload: dict,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
 
     workspace = ForecastWorkspace(
@@ -42,6 +53,18 @@ def create_workspace(
 
     db.refresh(workspace)
 
+    create_notification(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        title="Workspace Created",
+
+        message=f"{workspace.workspace_name} workspace created"
+
+    )
+
     return {
         "message": "Workspace created",
         "workspace": {
@@ -51,6 +74,8 @@ def create_workspace(
             "owner_id": workspace.owner_id
         }
     }
+
+    
 
 
 @router.get("/")

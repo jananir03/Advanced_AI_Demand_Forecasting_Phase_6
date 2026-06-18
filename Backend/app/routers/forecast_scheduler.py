@@ -31,6 +31,10 @@ from app.services.auto_forecast_service import (
     run_scheduled_forecast
 )
 
+from app.services.notification_service import (
+    create_notification
+)
+
 router = APIRouter(
     prefix="/scheduler",
     tags=["Forecast Scheduler"]
@@ -102,6 +106,18 @@ def create_schedule(
             ),
 
         interval_hours=hours
+    )
+
+    create_notification(
+
+        db=db,
+
+        user_id=current_user.id,
+
+        title="Forecast Scheduler Started",
+
+        message="Forecast scheduler started successfully"
+
     )
 
     return {

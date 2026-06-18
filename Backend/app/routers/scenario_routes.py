@@ -5,6 +5,12 @@ from fastapi import (
 
 from sqlalchemy.orm import Session
 
+from fastapi.responses import FileResponse
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+import tempfile
+from openpyxl import Workbook
+
 from app.config.database import get_db
 
 from app.models.scenario_analysis import (
@@ -194,3 +200,115 @@ def get_scenarios(
         })
 
     return result
+
+@router.get("/download/pdf/{scenario_id}")
+def download_scenario_pdf(
+    scenario_id: int,
+    db: Session = Depends(get_db)
+):
+
+    scenario = (
+        db.query(ScenarioAnalysis)
+        .filter(ScenarioAnalysis.id == scenario_id)
+        .first()
+    )
+
+    if not scenario:
+        return {"message": "Scenario not found"}
+
+    temp_file = tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=".pdf"
+    )
+
+    doc = SimpleDocTemplate(
+        temp_file.name
+    )
+
+    styles = getSampleStyleSheet()
+
+    content = [
+
+        Paragraph(
+            "Scenario Analysis Report",
+            styles["Title"]
+        ),
+
+        Spacer(1, 20),
+
+        Paragraph(
+            f"Scenario Name: {scenario.scenario_name}",
+            styles["Normal"]
+        ),
+
+        Paragraph(
+            f"Best Case: {scenario.best_case}",
+            styles["Normal"]
+        ),
+
+        Paragraph(
+            f"Expected Case: {scenario.normal_case}",
+            styles["Normal"]
+        ),
+
+        Paragraph(
+            f"Worst Case: {scenario.worst_case}",
+            styles["Normal"]
+        )
+    ]
+
+    doc.build(content)
+
+    return FileResponse(
+        temp_file.name,
+        filename=f"{scenario.scenario_name}.pdf",
+        media_type="application/pdf"
+    )
+
+@router.get("/download/excel/{scenario_id}")
+def download_scenario_excel(
+    scenario_id: int,
+    db: Session = Depends(get_db)
+):
+
+    scenario = (
+        db.query(ScenarioAnalysis)
+        .filter(ScenarioAnalysis.id == scenario_id)
+        .first()
+    )
+
+    if not scenario:
+        return {"message": "Scenario not found"}
+
+    wb = Workbook()
+
+    ws = wb.active
+
+    ws.title = "Scenario Report"
+
+    ws.append([
+        "Scenario Name",
+        "Best Case",
+        "Expected Case",
+        "Worst Case"
+    ])
+
+    ws.append([
+        scenario.scenario_name,
+        scenario.best_case,
+        scenario.normal_case,
+        scenario.worst_case
+    ])
+
+    temp_file = tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=".xlsx"
+    )
+
+    wb.save(temp_file.name)
+
+    return FileResponse(
+        temp_file.name,
+        filename=f"{scenario.scenario_name}.xlsx",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )

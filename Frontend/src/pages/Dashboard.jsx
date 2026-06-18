@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 
 import MainLayout from "../layouts/MainLayout";
 
-import DashboardCard from "../components/DashboardCard";
-
 import SalesChart from "../components/SalesChart";
 
 import TopProductsChart from "../components/TopProductsChart";
@@ -51,6 +49,8 @@ const Dashboard = () => {
 
   const [loading, setLoading] = useState(true);
 
+  const [widgets, setWidgets] = useState([]);
+
   useEffect(() => {
 
     fetchDashboardData();
@@ -62,6 +62,15 @@ const Dashboard = () => {
     const datasetId =
       localStorage.getItem(
         "active_dataset_id"
+      );
+
+      const widgetsRes =
+        await API.get(
+          "/dashboard-widgets/"
+        );
+
+      setWidgets(
+        widgetsRes.data || []
       );
 
     try {
@@ -204,6 +213,23 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+  const isWidgetVisible = (
+    widgetName
+  ) => {
+
+    const widget =
+      widgets.find(
+
+        (w) =>
+          w.widget_name ===
+          widgetName
+
+      );
+
+    return widget
+      ? widget.is_visible
+      : true;
+  };
 
   if (loading) {
 
@@ -225,497 +251,715 @@ const Dashboard = () => {
 
     <MainLayout>
 
-      {/* ----------------------------------- */}
-      {/* DASHBOARD CARDS */}
-      {/* ----------------------------------- */}
+    <div className="space-y-8 px-6">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      {/* EXECUTIVE HERO */}
 
-        <DashboardCard
+      <div className="
+        relative
+        overflow-hidden
+        rounded-[40px]
+        bg-gradient-to-r
+        from-cyan-600
+        via-blue-600
+        to-indigo-700
+        p-10
+        shadow-2xl
+      ">
 
-          title="Total Sales"
+        <div className="
+          absolute
+          top-0
+          right-0
+          w-72
+          h-72
+          bg-white/10
+          rounded-full
+          blur-3xl
+        " />
 
-          value={`₹${summary.total_sales}`}
+        <div className="relative z-10">
 
-          color="border-blue-500"
-        />
+          <h1 className="
+            text-5xl
+            font-bold
+            text-white
+          ">
 
-        <DashboardCard
+            Executive Dashboard
 
-          title="Forecasts"
+          </h1>
 
-          value={summary.total_forecasts}
+          <p className="
+            text-cyan-100
+            mt-4
+            text-lg
+            max-w-4xl
+          ">
 
-          color="border-purple-500"
-        />
+            Enterprise forecasting intelligence,
+            revenue forecasting, KPI monitoring,
+            scenario planning insights and
+            strategic decision support.
 
-        <DashboardCard
+          </p>
 
-          title="Datasets"
-
-          value={summary.total_datasets}
-
-          color="border-pink-500"
-        />
-
-        <DashboardCard
-
-          title="Accuracy"
-
-          value={`${summary.accuracy}%`}
-
-          color="border-cyan-500"
-        />
+        </div>
 
       </div>
 
-      {/* ----------------------------------- */}
+      {/* KPI OVERVIEW */}
+
+      <div className="
+        grid
+        grid-cols-1
+        md:grid-cols-2
+        xl:grid-cols-4
+        gap-6
+      ">
+
+        <div className="
+          bg-white/70
+          backdrop-blur-xl
+          rounded-[30px]
+          p-8
+          shadow-xl
+          border-l-4
+          border-cyan-500
+        ">
+
+          <p className="text-slate-500">
+
+            Total Sales
+
+          </p>
+
+          <h2 className="
+            text-4xl
+            font-bold
+            text-blue-950
+            mt-4
+          ">
+
+            ₹{summary.total_sales}
+
+          </h2>
+
+        </div>
+
+        <div className="
+          bg-white/70
+          backdrop-blur-xl
+          rounded-[30px]
+          p-8
+          shadow-xl
+          border-l-4
+          border-purple-500
+        ">
+
+          <p className="text-slate-500">
+
+            Forecasts
+
+          </p>
+
+          <h2 className="
+            text-4xl
+            font-bold
+            text-purple-600
+            mt-4
+          ">
+
+            {summary.total_forecasts}
+
+          </h2>
+
+        </div>
+
+        <div className="
+          bg-white/70
+          backdrop-blur-xl
+          rounded-[30px]
+          p-8
+          shadow-xl
+          border-l-4
+          border-pink-500
+        ">
+
+          <p className="text-slate-500">
+
+            Datasets
+
+          </p>
+
+          <h2 className="
+            text-4xl
+            font-bold
+            text-pink-600
+            mt-4
+          ">
+
+            {summary.total_datasets}
+
+          </h2>
+
+        </div>
+
+        <div className="
+          bg-white/70
+          backdrop-blur-xl
+          rounded-[30px]
+          p-8
+          shadow-xl
+          border-l-4
+          border-green-500
+        ">
+
+          <p className="text-slate-500">
+
+            Forecast Accuracy
+
+          </p>
+
+          <h2 className="
+            text-4xl
+            font-bold
+            text-green-600
+            mt-4
+          ">
+
+            {summary.accuracy}%
+
+          </h2>
+
+        </div>
+
+      </div>
+
       {/* CHARTS */}
-      {/* ----------------------------------- */}
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-10">
+      <div className="
+        grid
+        grid-cols-1
+        xl:grid-cols-2
+        gap-8
+      ">
 
-        {/* SALES CHART */}
+        {/* MONTHLY SALES */}
 
-        <div className="bg-white/80 dark:bg-slate-800 backdrop-blur-lg rounded-3xl shadow-xl p-8">
+        {isWidgetVisible(
+          "Revenue Analytics"
+        ) && (
 
-          <h2 className="text-2xl font-bold mb-6 text-blue-950 dark:text-white">
+
+
+        <div className="
+          bg-white/70
+          backdrop-blur-xl
+          rounded-[35px]
+          p-10
+          shadow-xl
+          border
+          border-white/20
+        ">
+
+          <h2 className="
+            text-3xl
+            font-bold
+            text-blue-950
+            mb-8
+          ">
 
             Monthly Sales Trends
 
           </h2>
 
-          <SalesChart data={monthlySales} />
+          <SalesChart
+            data={monthlySales}
+          />
 
         </div>
+        )}
 
         {/* TOP PRODUCTS */}
 
-        <div className="bg-white/80 dark:bg-slate-800 backdrop-blur-lg rounded-3xl shadow-xl p-8">
+        {isWidgetVisible(
+          "Top Products"
+        ) && (
 
-          <h2 className="text-2xl font-bold mb-6 text-blue-950 dark:text-white">
+        <div className="
+          bg-white/70
+          backdrop-blur-xl
+          rounded-[35px]
+          p-10
+          shadow-xl
+          border
+          border-white/20
+        ">
+
+          <h2 className="
+            text-3xl
+            font-bold
+            text-blue-950
+            mb-8
+          ">
 
             Top Products
 
           </h2>
 
-          <TopProductsChart data={topProducts} />
-
-        </div>
-
-      </div>
-
-      {/* ----------------------------------- */}
-      {/* REVENUE ANALYTICS */}
-      {/* ----------------------------------- */}
-
-      <div className="mt-10 bg-white/80 dark:bg-slate-800 rounded-3xl shadow-xl p-8">
-
-        <h2 className="text-3xl font-bold mb-6">
-
-          Revenue Analytics
-
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-          <DashboardCard
-
-            title="Total Revenue"
-
-            value={`₹${revenueAnalytics.total_revenue || 0}`}
-
-            color="border-green-500"
-          />
-
-          <DashboardCard
-
-            title="Predicted Growth"
-
-            value={`₹${revenueAnalytics.predicted_growth || 0}`}
-
-            color="border-blue-500"
-          />
-
-          <DashboardCard
-
-            title="Monthly Average"
-
-            value={`₹${revenueAnalytics.monthly_average || 0}`}
-
-            color="border-purple-500"
+          <TopProductsChart
+            data={topProducts}
           />
 
         </div>
+        )}
 
       </div>
 
-      {/* ----------------------------------- */}
-      {/* REGION ANALYTICS */}
-      {/* ----------------------------------- */}
+      {/* EXECUTIVE OPERATIONS GRID */}
 
-      <div className="mt-10 bg-white/80 dark:bg-slate-800 rounded-3xl shadow-xl p-8">
+      <div className="
+        grid
+        grid-cols-1
+        xl:grid-cols-2
+        gap-8
+      ">
 
-        <h2 className="text-3xl font-bold mb-6">
+        {/* INVENTORY RISK */}
 
-          Region Analytics
+        {isWidgetVisible(
+          "Inventory Risk"
+        ) && (
 
-        </h2>
+        <div className="
+          bg-white/70
+          backdrop-blur-xl
+          rounded-[35px]
+          p-10
+          shadow-xl
+          border
+          border-white/20
+        ">
 
-        <table className="w-full">
+          <div className="
+            flex
+            items-center
+            gap-3
+            mb-8
+          ">
 
-          <thead>
+            <div className="
+              w-12
+              h-12
+              rounded-2xl
+              bg-red-100
+              flex
+              items-center
+              justify-center
+            ">
 
-            <tr>
+              📦
 
-              <th className="text-left p-3">
-                Region
-              </th>
+            </div>
 
-              <th className="text-left p-3">
-                Total Sales
-              </th>
+            <div>
 
-            </tr>
+              <h2 className="
+                text-2xl
+                font-bold
+                text-blue-950
+              ">
 
-          </thead>
+                Inventory Risk
 
-          <tbody>
+              </h2>
 
-            {regionAnalytics.map((region, index) => (
+              <p className="text-slate-500">
 
-              <tr
+                Stock monitoring & demand risks
+
+              </p>
+
+            </div>
+
+          </div>
+          
+        
+
+         <div className="space-y-3">
+
+          {inventoryRisk?.length > 0 ? (
+
+            inventoryRisk.slice(0, 5).map((item, index) => (
+
+              <div
                 key={index}
-                className="border-t"
+                className="flex justify-between p-3 rounded-xl bg-slate-100"
               >
+                <span>
+                  {item.product_name || item.product || `Item ${index + 1}`}
+                </span>
 
-                <td className="p-3">
-                  {region.region}
-                </td>
+                <span className="font-semibold text-red-600">
+                  {item.risk_level || "High"}
+                </span>
 
-                <td className="p-3">
-                  ₹{region.total_sales}
-                </td>
+              </div>
 
-              </tr>
+            ))
 
-            ))}
+          ) : (
 
-          </tbody>
+            <div className="text-slate-500">
+              No Inventory Risks Found
+            </div>
 
-        </table>
+          )}
+
+        </div>
+
+        </div>
+        )}
+
+        {/* SYSTEM METRICS */}
+
+        <div className="
+          bg-gradient-to-br
+          from-slate-900
+          via-slate-800
+          to-slate-900
+          rounded-[35px]
+          p-10
+          shadow-2xl
+        ">
+
+          <h2 className="
+            text-3xl
+            font-bold
+            text-white
+            mb-8
+          ">
+
+            System Metrics
+
+          </h2>
+
+          {
+
+            systemMetrics ? (
+
+              <div className="
+                grid
+                grid-cols-2
+                gap-6
+              ">
+
+                <div className="
+                  bg-white/5
+                  rounded-3xl
+                  p-6
+                  border
+                  border-white/10
+                ">
+
+                  <p className="
+                    text-slate-400
+                  ">
+
+                    Total Users
+
+                  </p>
+
+                  <h3 className="
+                    text-4xl
+                    font-bold
+                    text-cyan-400
+                    mt-3
+                  ">
+
+                    {systemMetrics.total_users || 0}
+
+                  </h3>
+
+                </div>
+
+                <div className="
+                  bg-white/5
+                  rounded-3xl
+                  p-6
+                  border
+                  border-white/10
+                ">
+
+                  <p className="
+                    text-slate-400
+                  ">
+
+                    Datasets
+
+                  </p>
+
+                  <h3 className="
+                    text-4xl
+                    font-bold
+                    text-green-400
+                    mt-3
+                  ">
+
+                    {systemMetrics.total_datasets || 0}
+
+                  </h3>
+
+                </div>
+
+                <div className="
+                  bg-white/5
+                  rounded-3xl
+                  p-6
+                  border
+                  border-white/10
+                ">
+
+                  <p className="
+                    text-slate-400
+                  ">
+
+                    Forecasts
+
+                  </p>
+
+                  <h3 className="
+                    text-4xl
+                    font-bold
+                    text-purple-400
+                    mt-3
+                  ">
+
+                    {systemMetrics.total_forecasts || 0}
+
+                  </h3>
+
+                </div>
+
+                <div className="
+                  bg-white/5
+                  rounded-3xl
+                  p-6
+                  border
+                  border-white/10
+                ">
+
+                  <p className="
+                    text-slate-400
+                  ">
+
+                    Active Models
+
+                  </p>
+
+                  <h3 className="
+                    text-4xl
+                    font-bold
+                    text-orange-400
+                    mt-3
+                  ">
+
+                    {systemMetrics.active_models || 0}
+
+                  </h3>
+
+                </div>
+
+              </div>
+
+            ) : (
+
+              <div className="
+                text-center
+                py-16
+                text-slate-400
+              ">
+
+                No System Metrics Available
+
+              </div>
+
+            )
+
+          }
+
+        </div>
 
       </div>
 
-      {/* ----------------------------------- */}
-      {/* INVENTORY RISK */}
-      {/* ----------------------------------- */}
+            {/* RECENT ACTIVITY */}
 
-      <div className="mt-10 bg-white/80 dark:bg-slate-800 rounded-3xl shadow-xl p-8">
+      <div className="
+        bg-white/70
+        backdrop-blur-xl
+        rounded-[35px]
+        p-10
+        shadow-xl
+        border
+        border-white/20
+      ">
 
-        <h2 className="text-3xl font-bold mb-6">
+        <div className="
+          flex
+          items-center
+          justify-between
+          mb-8
+        ">
 
-          Inventory Risk Analysis
+          <div>
 
-        </h2>
+            <h2 className="
+              text-3xl
+              font-bold
+              text-blue-950
+            ">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              Recent Activity
 
-        {inventoryRisk.map((item, index) => (
+            </h2>
 
-          <div
-            key={index}
-            className={`rounded-2xl p-5 shadow-sm border ${
-            theme === "dark"
-            ? "bg-slate-700 border-slate-600"
-            : "bg-white border-slate-200"
-          }`}
-          >
+            <p className="
+              text-slate-500
+              mt-2
+            ">
 
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white">
-
-              {item.product}
-
-            </h3>
-
-            <p className="mt-2 text-slate-700 dark:text-gray-200">
-
-              Sales Amount:
-              ₹{item.sales}
-
-            </p>
-
-            <p className="text-slate-700 dark:text-gray-200">
-
-              Risk Level:
-              {item.risk_level}
+              Latest forecasting and system events
 
             </p>
 
           </div>
 
-        ))}
-
-      </div>
-
-    </div>
-
-    {/* ----------------------------------- */}
-    {/* BUSINESS INSIGHTS */}
-    {/* ----------------------------------- */}
-
-    <div className="mt-10 bg-white/80 dark:bg-slate-800 rounded-3xl shadow-xl p-8">
-
-      <h2 className="text-3xl font-bold mb-6">
-
-        AI Business Insights
-
-      </h2>
-
-      <div className="space-y-4">
-
-        {businessInsights.map((insight, index) => (
-
-        <div
-          key={index}
-          className="bg-blue-50 dark:bg-slate-700 rounded-xl p-4 text-black dark:text-white"
-        >
-
-          {insight}
-
         </div>
-
-      ))}
-
-      </div>
-
-    </div>
-
-    {/* ----------------------------------- */}
-    {/* SYSTEM METRICS */}
-    {/* ----------------------------------- */}
-
-    <div className="mt-10 bg-white/80 dark:bg-slate-800 rounded-3xl shadow-xl p-8">
-
-      <h2 className="text-3xl font-bold mb-6">
-
-        System Metrics
-
-      </h2>
-
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-
-      <DashboardCard
-        title="API Health"
-        value={systemMetrics.api_health || "-"}
-        color="border-green-500"
-      />
-
-      <DashboardCard
-        title="System Load"
-        value={systemMetrics.system_load || "-"}
-        color="border-blue-500"
-      />
-
-      <DashboardCard
-        title="Users"
-        value={systemMetrics.total_users || 0}
-        color="border-purple-500"
-      />
-
-      <DashboardCard
-        title="Datasets"
-        value={systemMetrics.total_datasets || 0}
-        color="border-pink-500"
-      />
-
-      <DashboardCard
-        title="Forecasts"
-        value={systemMetrics.total_forecasts || 0}
-        color="border-cyan-500"
-      />
-
-    </div>
-
-  </div>
-
-      {/* ----------------------------------- */}
-      {/* ANOMALY DETECTION */}
-      {/* ----------------------------------- */}
-
-      <div className="mt-10 bg-white/80 dark:bg-slate-800 rounded-3xl shadow-xl p-8">
-
-        <h2 className="text-3xl font-bold text-red-600 mb-6">
-
-          Anomaly Detection
-
-        </h2>
 
         {
 
-          anomalies.length > 0 ? (
+          activities?.length > 0 ? (
 
             <div className="space-y-4">
 
               {
 
-                anomalies.map(
+                activities.map((activity, index) => (
 
-                  (item, index) => (
+                  <div
 
-                    <div
+                    key={index}
 
-                      key={index}
+                    className="
+                      flex
+                      items-center
+                      justify-between
+                      p-5
+                      rounded-2xl
+                      bg-slate-50
+                      hover:bg-slate-100
+                      transition-all
+                    "
 
-                      className="bg-red-50 border-l-8 border-red-500 rounded-2xl p-5 shadow-sm"
-                    >
+                  >
 
-                    <h3 className="text-xl font-bold text-red-800">
+                    <div>
 
-                      {item.product}
+                      <h3 className="
+                        font-semibold
+                        text-blue-950
+                      ">
 
-                    </h3>
+                        {
 
-                    <p className="mt-2 text-red-700">
+                          activity.activity ||
 
-                      Sales Amount:
-                      ₹{item.sales_amount}
+                          activity.action ||
 
-                    </p>
+                          activity.title ||
 
-                    <p className="text-red-700 font-bold">
+                          "System Activity"
 
-                      {item.status}
+                        }
 
-                    </p>
+                      </h3>
+
+                      <p className="
+                        text-slate-500
+                        text-sm
+                        mt-1
+                      ">
+
+                        {
+
+                          activity.description ||
+
+                          activity.details ||
+
+                          "No description available"
+
+                        }
+
+                      </p>
+
+                    </div>
+
+                    <div className="
+                      text-sm
+                      text-slate-400
+                    ">
+
+                      {
+
+                        activity.created_at
+
+                        ?
+
+                        new Date(
+                          activity.created_at
+                        ).toLocaleDateString()
+
+                        :
+
+                        "-"
+
+                      }
+
+                    </div>
 
                   </div>
 
-                )
-              )
-            }
+                ))
 
-          </div>
-
-        ) : (
-
-          <div className="text-green-600 text-lg font-semibold">
-
-            No anomalies detected.
-
-          </div>
-
-        )
-      }
-
-    </div>
-
-      {/* ----------------------------------- */}
-      {/* RECENT ACTIVITY */}
-      {/* ----------------------------------- */}
-
-      <div className="mt-10 bg-white/55 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/30">
-
-        {/* HEADER */}
-
-        <div className="flex items-center justify-between mb-8">
-
-          <h2 className="text-4xl font-bold text-blue-950 dark:text-white">
-
-            Recent Activity
-
-          </h2>
-
-          <span className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm">
-
-            Live Updates
-
-          </span>
-
-        </div>
-
-        {/* ACTIVITIES */}
-
-        {
-
-          activities.length > 0 ? (
-
-            <div className="space-y-6">
-
-              {
-
-                activities.map(
-
-                  (activity, index) => (
-
-                    <div
-
-                      key={index}
-
-                      className="bg-white/70 rounded-3xl p-6 shadow-lg border border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
-                    >
-
-                      {/* LEFT */}
-
-                      <div className="space-y-2">
-
-                        <h3 className="text-2xl font-bold text-slate-800">
-
-                          {activity.type}
-
-                        </h3>
-
-                        <p className="text-slate-600">
-
-                          <span className="font-semibold">
-
-                            {activity.description}
-
-                          </span>
-
-                        </p>
-
-                      </div>
-
-                      {/* RIGHT */}
-
-                      <div className="flex flex-col items-start md:items-end gap-3">
-
-                        <span className="bg-green-100 text-green-700 px-4 py-2 rounded-xl font-semibold">
-
-                          Completed
-
-                        </span>
-
-                        <span className="text-slate-500 text-sm">
-
-                          {activity.time}
-
-                        </span>
-
-                      </div>
-
-                    </div>
-                  )
-                )
               }
 
             </div>
 
           ) : (
 
-            <div className="text-slate-700 text-xl">
+            <div className="
+              text-center
+              py-16
+              text-slate-500
+            ">
 
-              No recent activity found.
+              No Recent Activities Found
 
             </div>
+
           )
+
         }
 
       </div>
 
-    </MainLayout>
-  );
+    </div>
+
+  </MainLayout>
+
+);
+
 };
 
 export default Dashboard;

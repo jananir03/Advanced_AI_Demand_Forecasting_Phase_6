@@ -27,6 +27,12 @@ from app.services.activity_service import (
     create_activity
 )
 
+from app.services.notification_service import (
+    create_notification
+)
+
+from app.models.user import User
+
 router = APIRouter()
 
 
@@ -176,6 +182,18 @@ def login_user(
 
         description=f"{existing_user.username} logged into the system"
     )
+
+    create_notification(
+
+    db=db,
+
+    user_id=existing_user.id,
+
+    title="User Logged In",
+
+    message=f"{existing_user.username} logged in successfully"
+
+)
 
     return {
 

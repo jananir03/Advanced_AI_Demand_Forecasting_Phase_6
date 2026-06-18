@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import API from "../services/api";
 
 const MainLayout = ({ children }) => {
 
@@ -12,34 +13,77 @@ const MainLayout = ({ children }) => {
     "light"
   );
 
+  const [
+
+    unreadCount,
+
+    setUnreadCount
+
+  ] = useState(0);
+
   useEffect(() => {
 
     localStorage.setItem(
       "theme",
       theme
     );
-    if (theme =="dark") {
+
+    if (theme === "dark") {
+
       document.documentElement.classList.add(
         "dark"
       );
+
     } else {
 
       document.documentElement.classList.remove(
         "dark"
       );
+
     }
 
   }, [theme]);
 
-  
+  useEffect(() => {
+
+    const fetchUnreadCount = async () => {
+
+      try {
+
+        const response =
+          await API.get(
+            "/notifications/unread-count"
+          );
+
+        setUnreadCount(
+          response.data.unread_count
+        );
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
+    fetchUnreadCount();
+
+  }, []);
+
+  const handleLogout = () => {
+
+    localStorage.clear();
+
+    window.location.href = "/login";
+
+  };
 
   return (
 
     <div
 
       className={`
-
-        flex
 
         min-h-screen
 
@@ -49,66 +93,77 @@ const MainLayout = ({ children }) => {
 
         transition-all
 
-        duration-300
+        duration-500
 
         ${
 
           theme === "dark"
 
-            ? "bg-slate-900"
+            ?
 
-            : "bg-gradient-to-br from-blue-700 via-sky-200 to-indigo-300"
+            "bg-[#020617]"
+
+            :
+
+            "bg-gradient-to-br from-[#0F172A] via-[#1E3A8A] via-50% to-[#312E81]"
+
         }
 
       `}
     >
 
-      {/* LEFT GLOW */}
+      {/* CYAN GLOW */}
 
-      <div className="absolute left-0 bottom-0 w-96 h-96 bg-blue-600/30 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-3xl"></div>
 
-      {/* RIGHT GLOW */}
+      {/* PURPLE GLOW */}
 
-      <div className="absolute right-0 top-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl"></div>
+      <div className="absolute right-0 top-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-3xl"></div>
 
-      {/* CENTER GLOW */}
+      {/* BLUE GLOW */}
 
-      <div className="absolute top-1/3 left-1/3 w-[400px] h-[300px] bg-cyan-200/20 rounded-full blur-3xl"></div>
-
-      {/* ANALYTICS GRAPH */}
-
-      <div className="absolute right-16 bottom-16 opacity-10">
-
-        <svg width="320" height="180">
-
-          <polyline
-
-            fill="none"
-
-            stroke="#1e3a8a"
-
-            strokeWidth="6"
-
-            points="0,140 60,100 120,120 180,70 240,90 300,40"
-          />
-
-        </svg>
-
-      </div>
+      <div className="absolute bottom-0 left-1/3 w-[600px] h-[400px] bg-blue-500/10 rounded-full blur-3xl"></div>
 
       {/* SIDEBAR */}
 
       <Sidebar />
 
-      {/* MAIN CONTENT */}
+      {/* MAIN SECTION */}
 
-      <div className="flex-1 flex flex-col relative z-10 ml-72">
+      <div
 
-        <Navbar />
+        className="
 
-        {/* THEME TOGGLE */}
+          relative
 
-        <div className="flex justify-end px-6 pt-4">
+          z-10
+
+          ml-[340px]
+
+          mr-6
+
+          mt-6
+
+          mb-6
+
+          min-h-[calc(100vh-48px)]
+
+          flex
+
+          flex-col
+
+        "
+
+      >
+        <Navbar
+          unreadCount={unreadCount}
+          
+          onLogout={handleLogout}
+        />
+
+        {/* TOP ACTION BAR */}
+
+        <div className="flex justify-end mt-5 mb-5">
 
           <button
 
@@ -124,44 +179,78 @@ const MainLayout = ({ children }) => {
               )
             }
 
-            className="bg-slate-800 text-white px-4 py-2 rounded-xl shadow-lg hover:scale-105 transition"
+            className="
+
+              px-5
+
+              py-3
+
+              rounded-2xl
+
+              bg-white/10
+
+              backdrop-blur-xl
+
+              border
+
+              border-white/10
+
+              text-white
+
+              shadow-xl
+
+              hover:scale-105
+
+              transition-all
+
+            "
+
           >
 
             {
 
               theme === "dark"
 
-                ? "☀️ Light Mode"
+                ?
 
-                : "🌙 Dark Mode"
+                "☀️ Light Mode"
+
+                :
+
+                "🌙 Dark Mode"
+
             }
 
           </button>
 
         </div>
 
+        {/* PAGE CONTENT */}
+
         <div
 
-          className={`
+          className="
 
-            p-6
+            flex-1
 
-            overflow-y-auto
+            rounded-[32px]
 
-            transition-all
+            bg-transparent
 
-            duration-300
+            backdrop-blur-xl
 
-            ${
+            border
 
-              theme === "dark"
+            border-white/10
 
-                ? "text-white"
+            shadow-2xl
 
-                : "text-black"
-            }
+            p-8
 
-          `}
+            overflow-auto
+
+          "
+
         >
 
           {children}
@@ -171,7 +260,9 @@ const MainLayout = ({ children }) => {
       </div>
 
     </div>
+
   );
+
 };
 
 export default MainLayout;

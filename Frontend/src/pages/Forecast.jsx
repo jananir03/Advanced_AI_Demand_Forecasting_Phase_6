@@ -515,12 +515,7 @@ const Forecast = () => {
 
     <MainLayout>
 
-      <div className="min-h-screen relative overflow-hidden p-10">
-
-
-        {/* Background */}
-
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-sky-400 to-indigo-300"></div>
+      <div className="relative min-h-screen p-8 bg-gradient-to-br from-slate-950 via-indigo-950 ">
 
 
         {/* Background Shapes */}
@@ -535,28 +530,98 @@ const Forecast = () => {
         <div className="relative z-10 space-y-10">
 
 
-          {/* Heading */}
+          {/* EXECUTIVE HERO */}
 
-          <div>
+          <div className="
+            relative
+            overflow-hidden
+            rounded-[40px]
+            bg-gradient-to-r
+            from-cyan-600
+            via-blue-600
+            to-indigo-700
+            p-10
+            shadow-2xl
+          ">
 
-            <h1 className="text-5xl font-bold text-blue-950 mb-4">
+            <div className="
+              absolute
+              top-0
+              right-0
+              w-72
+              h-72
+              bg-white/10
+              rounded-full
+              blur-3xl
+            " />
 
-              AI Sales Forecasting
+            <div className="
+              absolute
+              bottom-0
+              left-0
+              w-72
+              h-72
+              bg-white/10
+              rounded-full
+              blur-3xl
+            " />
 
-            </h1>
+            <div className="relative z-10">
 
-            <p className="text-xl text-slate-800">
+              <div className="
+                inline-flex
+                items-center
+                gap-2
+                bg-white/15
+                text-white
+                px-4
+                py-2
+                rounded-full
+                mb-5
+              ">
 
-              Generate intelligent sales and revenue predictions using AI models.
+                AI Forecast Engine
 
-            </p>
+              </div>
+
+              <h1 className="
+                text-5xl
+                font-bold
+                text-white
+              ">
+
+                Executive Forecast Center
+
+              </h1>
+
+              <p className="
+                text-cyan-100
+                mt-4
+                text-lg
+                max-w-4xl
+              ">
+
+                Generate intelligent sales forecasts,
+                revenue predictions and business demand
+                insights using enterprise AI models.
+
+              </p>
+
+            </div>
 
           </div>
 
-
           {/* Filters */}
 
-          <div className="bg-white/55 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/30">
+          <div className="
+            bg-white/70
+            backdrop-blur-xl
+            rounded-[35px]
+            p-10
+            shadow-xl
+            border
+            border-white/20
+          ">
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
 
@@ -890,30 +955,311 @@ const Forecast = () => {
           }
 
 
-          {/* Forecast Chart */}
+          {/* FORECAST COMMAND CENTER */}
 
           {
 
             !loading &&
 
-            forecastData.length > 0 && (
+            forecastData.length > 0 && 
+            (
+            
 
-              <div className="bg-white/55 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/30">
+              <div className="
+                bg-white/70
+                backdrop-blur-xl
+                rounded-[40px]
+                p-10
+                shadow-xl
+                border
+                border-white/20
+              ">
 
-                <h2 className="text-4xl font-bold text-blue-950 mb-4">
+                <div className="
+                  flex
+                  flex-col
+                  xl:flex-row
+                  justify-between
+                  xl:items-center
+                  mb-10
+                ">
 
-                  Forecast Visualization
+                  <div>
 
-                </h2>
+                    <div className="
+                      inline-flex
+                      items-center
+                      gap-2
+                      bg-blue-100
+                      text-blue-700
+                      px-4
+                      py-2
+                      rounded-full
+                      mb-4
+                    ">
 
-                <p className="text-lg text-slate-700 mb-10">
+                      Forecast Analytics
 
-                  AI-generated sales and revenue forecasting.
+                    </div>
 
-                </p>
+                    <h2 className="
+                      text-4xl
+                      font-bold
+                      text-blue-950
+                    ">
 
+                      Forecast Command Center
 
-                <div className="h-[550px]">
+                    </h2>
+
+                    <p className="
+                      text-slate-600
+                      mt-3
+                    ">
+
+                      AI-generated sales and revenue forecasting insights.
+
+                    </p>
+
+                  </div>
+
+                  <div className="
+                    grid
+                    grid-cols-3
+                    gap-4
+                    mt-6
+                    xl:mt-0
+                  ">
+
+                    <div className="
+                      bg-slate-50
+                      rounded-2xl
+                      px-5
+                      py-4
+                      text-center
+                    ">
+
+                      <p className="text-slate-500 text-sm">
+
+                        Model
+
+                      </p>
+
+                      <p className="
+                        font-bold
+                        text-blue-700
+                      ">
+
+                        {model}
+
+                      </p>
+
+                    </div>
+
+                    <div className="
+                      bg-slate-50
+                      rounded-2xl
+                      px-5
+                      py-4
+                      text-center
+                    ">
+
+                      <p className="text-slate-500 text-sm">
+
+                        Duration
+
+                      </p>
+
+                      <p className="
+                        font-bold
+                        text-green-600
+                      ">
+
+                        {duration}
+
+                      </p>
+
+                    </div>
+
+                    <div className="
+                      bg-slate-50
+                      rounded-2xl
+                      px-5
+                      py-4
+                      text-center
+                    ">
+
+                      <p className="text-slate-500 text-sm">
+
+                        Records
+
+                      </p>
+
+                      <p className="
+                        font-bold
+                        text-purple-600
+                      ">
+
+                        {forecastData.length}
+
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                {/* FORECAST SUMMARY */}
+
+                <div className="
+                  grid
+                  grid-cols-1
+                  md:grid-cols-3
+                  gap-6
+                  mt-8
+                ">
+
+                  <div className="
+                    bg-gradient-to-br from-green-500 to-emerald-600 text-white
+                    backdrop-blur-xl
+                    rounded-[30px]
+                    p-8
+                    shadow-xl
+                    border-l-4
+                    border-green-500
+                  ">
+
+                    <p className="text-black-800">
+
+                      Latest Predicted Revenue
+
+                    </p>
+
+                    <h2 className="
+                      text-4xl
+                      font-bold
+                      text-black-600
+                      mt-4
+                    ">
+
+                      ₹
+
+                      {
+
+                        forecastData.length > 0
+
+                        ?
+
+                        Math.round(
+
+                          forecastData[
+                            forecastData.length - 1
+                          ]?.predicted_revenue || 0
+
+                        ).toLocaleString()
+
+                        :
+
+                        0
+
+                      }
+
+                    </h2>
+
+                  </div>
+
+                  <div className="
+                    bg-gradient-to-br from-blue-500 to-cyan-600 text-white
+                    backdrop-blur-xl
+                    rounded-[30px]
+                    p-8
+                    shadow-xl
+                    border-l-4
+                    border-blue-500
+                  ">
+
+                    <p className="text-black-800">
+
+                      Latest Predicted Sales
+
+                    </p>
+
+                    <h2 className="
+                      text-4xl
+                      font-bold
+                      text-black-600
+                      mt-4
+                    ">
+
+                      {
+
+                        forecastData.length > 0
+
+                        ?
+
+                        Math.round(
+
+                          forecastData[
+                            forecastData.length - 1
+                          ]?.predicted_sales || 0
+
+                        ).toLocaleString()
+
+                        :
+
+                        0
+
+                      }
+
+                    </h2>
+
+                  </div>
+
+                  <div className="
+                    bg-gradient-to-br from-purple-500 to-indigo-600 text-white
+                    backdrop-blur-xl
+                    rounded-[30px]
+                    p-8
+                    shadow-xl
+                    border-l-4
+                    border-purple-500
+                  ">
+
+                    <p className="text-black-800">
+
+                      Forecast Horizon
+
+                    </p>
+
+                    <h2 className="
+                      text-4xl
+                      font-bold
+                      text-black-600
+                      mt-4
+                    ">
+
+                      {duration}
+
+                    </h2>
+
+                  </div>
+
+                </div>
+
+                {/* FORECAST CHART */}
+
+                <div className="
+                  h-[550px]
+                  bg-gradient-to-br
+                  from-slate-900
+                  via-slate-800
+                  to-slate-900
+                  rounded-[35px]
+                  p-6
+                  shadow-2xl
+                  mt-8
+                ">
 
                   <ResponsiveContainer
                     width="100%"
@@ -924,13 +1270,9 @@ const Forecast = () => {
                       data={forecastData}
                     >
 
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                      />
+                      <CartesianGrid strokeDasharray="3 3" />
 
-                      <XAxis
-                        dataKey="date"
-                      />
+                      <XAxis dataKey="date" />
 
                       <YAxis />
 
@@ -939,28 +1281,18 @@ const Forecast = () => {
                       <Legend />
 
                       <Line
-
                         type="monotone"
-
                         dataKey="predicted_sales"
-
                         stroke="#2563eb"
-
                         strokeWidth={4}
-
                         name="Predicted Sales"
                       />
 
                       <Line
-
                         type="monotone"
-
                         dataKey="predicted_revenue"
-
                         stroke="#16a34a"
-
                         strokeWidth={4}
-
                         name="Predicted Revenue"
                       />
 
@@ -969,7 +1301,7 @@ const Forecast = () => {
                   </ResponsiveContainer>
 
                 </div>
-
+                    
               </div>
             )
           }
@@ -981,5 +1313,6 @@ const Forecast = () => {
     </MainLayout>
   );
 };
+
 
 export default Forecast;

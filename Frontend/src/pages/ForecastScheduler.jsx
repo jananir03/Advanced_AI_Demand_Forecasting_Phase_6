@@ -246,29 +246,31 @@ const ForecastScheduler = () => {
 
       <div className="min-h-screen relative overflow-hidden p-8">
 
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-sky-400 to-indigo-300"></div>
-
-        <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl"></div>
+     
 
         <div className="relative z-10 space-y-8">
 
                   {/* HEADER */}
 
-          <div className="bg-white/30 backdrop-blur-xl rounded-[35px] p-8 shadow-xl border border-white/20">
+          <div className="bg-gradient-to-r
+                from-indigo-600
+                via-blue-500
+                to-cyan-400
+                rounded-[35px]
+                p-10
+                shadow-[0_20px_60px_rgba(59,130,246,0.25)]">
 
             <div className="flex justify-between items-center">
 
               <div>
 
-                <h1 className="text-4xl font-bold text-blue-950">
+                <h1 className="text-4xl font-bold text-white">
 
                   Forecast Scheduler
 
                 </h1>
 
-                <p className="text-slate-700 mt-2">
+                <p className="text-blue-50 mt-2">
 
                   Automate forecasting workflows and schedule model execution.
 
@@ -284,7 +286,7 @@ const ForecastScheduler = () => {
                   fetchStatus();
                 }}
 
-                className="bg-blue-600 text-white px-5 py-3 rounded-2xl flex items-center gap-2 shadow-lg hover:scale-105 transition"
+                className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white px-5 py-3 rounded-2xl flex items-center gap-2 shadow-lg hover:scale-105 transition"
               >
 
                 <RefreshCw size={18} />
@@ -301,17 +303,17 @@ const ForecastScheduler = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-            <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-6 shadow-xl">
+            <div className="bg-gradient-to-br from-white/90 to-blue-50/80 border border-blue-100 rounded-[15px] shadow-[0_10px_40px_rgba(59,130,246,0.12)]">
 
               <Calendar className="text-blue-600 mb-3" size={35} />
 
-              <h3 className="text-slate-600">
+              <h3 className="text-slate-700 font-medium">
 
                 Total Schedules
 
               </h3>
 
-              <h1 className="text-4xl font-bold text-blue-950">
+              <h1 className="text-4xl font-bold text-slate-900">
 
                 {totalSchedules}
 
@@ -319,17 +321,17 @@ const ForecastScheduler = () => {
 
             </div>
 
-            <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-6 shadow-xl">
+            <div className="bg-gradient-to-br from-white/90 to-blue-50/80 border border-blue-100 rounded-[15px] shadow-[0_10px_40px_rgba(59,130,246,0.12)]">
 
               <Activity className="text-green-600 mb-3" size={35} />
 
-              <h3 className="text-slate-600">
+              <h3 className="text-slate-700 font-medium">
 
                 Active
 
               </h3>
 
-              <h1 className="text-4xl font-bold text-blue-950">
+              <h1 className="text-4xl font-bold text-slate-900">
 
                 {activeSchedules}
 
@@ -337,17 +339,17 @@ const ForecastScheduler = () => {
 
             </div>
 
-            <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-6 shadow-xl">
+            <div className="bg-gradient-to-br from-white/90 to-blue-50/80 border border-blue-100 rounded-[15px] shadow-[0_10px_40px_rgba(59,130,246,0.12)]">
 
               <PauseCircle className="text-orange-500 mb-3" size={35} />
 
-              <h3 className="text-slate-600">
+              <h3 className="text-slate-700 font-medium">
 
                 Inactive
 
               </h3>
 
-              <h1 className="text-4xl font-bold text-blue-950">
+              <h1 className="text-4xl font-bold text-slate-900">
 
                 {inactiveSchedules}
 
@@ -355,17 +357,17 @@ const ForecastScheduler = () => {
 
             </div>
 
-            <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-6 shadow-xl">
+            <div className="bg-gradient-to-br from-white/90 to-blue-50/80 border border-blue-100 rounded-[15px] shadow-[0_10px_40px_rgba(59,130,246,0.12)]">
 
               <Clock3 className="text-purple-600 mb-3" size={35} />
 
-              <h3 className="text-slate-600">
+              <h3 className="text-slate-700 font-medium">
 
                 Scheduler
 
               </h3>
 
-              <h1 className="text-2xl font-bold text-blue-950">
+              <h1 className="text-2xl font-bold text-slate-900">
 
                 {schedulerStatus ? "Running" : "Stopped"}
 
@@ -379,20 +381,20 @@ const ForecastScheduler = () => {
 
           <div className="grid md:grid-cols-2 gap-8">
 
-            <div className="bg-white/40 backdrop-blur-xl rounded-[35px] p-8 shadow-xl">
+            <div className="bg-gradient-to-br from-emerald-50 to-green-100 border border-blue-100 rounded-[15px] shadow-[0_10px_40px_rgba(59,130,246,0.12)] ">
 
-              <h2 className="text-2xl font-bold text-blue-950 mb-6">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">
 
                 Scheduler Control
               </h2>
 
-              <div className="flex gap-4">
+              <div className="flex gap-6">
 
                 <button
 
                   onClick={startScheduler}
 
-                  className="bg-green-600 text-white px-6 py-3 rounded-2xl flex items-center gap-2 hover:scale-105 transition"
+                  className="bg-green-600 text-slate-900 px-6 py-3 rounded-2xl flex items-center gap-2 hover:scale-105 transition"
                 >
 
                   <PlayCircle size={20} />
@@ -418,9 +420,9 @@ const ForecastScheduler = () => {
 
             </div>
 
-            <div className="bg-white/40 backdrop-blur-xl rounded-[35px] p-8 shadow-xl">
+            <div className="bg-gradient-to-br from-blue-50 via-cyan-50 to-indigo-100 border border-blue-100 rounded-[15px] shadow-[0_10px_40px_rgba(59,130,246,0.12)]l">
 
-              <h2 className="text-2xl font-bold text-blue-950 mb-6">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">
 
                 Create Schedule
 
@@ -542,9 +544,9 @@ const ForecastScheduler = () => {
 
           {/* TABLE */}
 
-          <div className="bg-white/40 backdrop-blur-xl rounded-[35px] p-8 shadow-xl">
+          <div className="bg-whiterounded-[35px] shadow-xl border border-slate-100 rounded-[15px] shadow-[0_10px_40px_rgba(59,130,246,0.12)]">
 
-            <h2 className="text-3xl font-bold text-blue-950 mb-8">
+            <h2 className="text-3xl font-bold text-white  mb-8">
 
               Active Schedules
 
@@ -554,41 +556,40 @@ const ForecastScheduler = () => {
 
               <table className="w-full">
 
-                <thead>
+                <thead className="bg-gradient-to-r from-indigo-50 to-blue-50">
+                  <tr className="border-b border-slate-100 hover:bg-blue-50 transition-colors">
 
-                  <tr className="border-b">
-
-                    <th className="text-left p-4">
+                    <th className="text-left px-6 py-4 font-semibold text-slate-700 uppercase tracking-wide text-sm">
 
                       ID
 
                     </th>
 
-                    <th className="text-left p-4">
+                    <th className="text-left px-6 py-4 font-semibold text-slate-700 uppercase tracking-wide text-sm">
 
                       Dataset
 
                     </th>
 
-                    <th className="text-left p-4">
+                    <th className="text-left px-6 py-4 font-semibold text-slate-700 uppercase tracking-wide text-sm">
 
                       Model
 
                     </th>
 
-                    <th className="text-left p-4">
+                    <th className="text-left px-6 py-4 font-semibold text-slate-700 uppercase tracking-wide text-sm">
 
                       Interval
 
                     </th>
 
-                    <th className="text-left p-4">
+                    <th className="text-left px-6 py-4 font-semibold text-slate-700 uppercase tracking-wide text-sm">
 
                       Status
 
                     </th>
 
-                    <th className="text-left p-4">
+                    <th className="text-left px-6 py-4 font-semibold text-slate-700 uppercase tracking-wide text-sm">
 
                       Actions
 
@@ -613,25 +614,25 @@ const ForecastScheduler = () => {
                           className="border-b"
                         >
 
-                          <td className="p-4">
+                          <td className="p-4 text-white">
 
                             {item.id}
 
                           </td>
 
-                          <td className="p-4">
+                          <td className="p-4 text-white">
 
                             {item.dataset_id}
 
                           </td>
 
-                          <td className="p-4">
+                          <td className="p-4 text-white">
 
                             {item.model_name}
 
                           </td>
 
-                          <td className="p-4">
+                          <td className="p-4 text-white">
 
                             {item.interval_type}
 

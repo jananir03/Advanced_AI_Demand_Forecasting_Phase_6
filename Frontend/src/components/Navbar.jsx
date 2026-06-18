@@ -1,26 +1,35 @@
 import {
-
-  Bell
-
-} from "lucide-react";
-
-import {
-
-  useState,
-  useEffect
-
-} from "react";
-
-import {
-
+  useLocation,
   useNavigate
-
 } from "react-router-dom";
+
+import {
+  useEffect,
+  useRef,
+  useState
+} from "react";
 
 import API from "../services/api";
 
+import {
+  Bell,
+  Search,
+  LogOut,
+  UserCircle,
+  Eye
+} from "lucide-react";
 
-const Navbar = () => {
+
+const Navbar = ({
+
+  unreadCount = 0,
+
+  onLogout
+
+}) => {
+
+  const location =
+    useLocation();
 
   const navigate =
     useNavigate();
@@ -41,247 +50,589 @@ const Navbar = () => {
 
   ] = useState([]);
 
+  const dropdownRef =
+    useRef(null);
 
-  // -----------------------------------
-  // FETCH ACTIVITIES
-  // -----------------------------------
+  const getPageTitle =
+    () => {
 
-  const fetchNotifications = async () => {
+      const pathname =
+        location.pathname;
 
-    try {
+      if (
+        pathname.includes(
+          "dashboard"
+        )
+      )
+        return "Dashboard";
 
-      const response = await API.get(
-        "/notifications"
-      );
+      if (
+        pathname.includes(
+          "forecast"
+        )
+      )
+        return "Forecast Center";
 
-      setNotifications(
-        response.data
-      );
+      if (
+        pathname.includes(
+          "scenario"
+        )
+      )
+        return "Scenario Planning";
 
-    } catch (error) {
+      if (
+        pathname.includes(
+          "workspace"
+        )
+      )
+        return "Forecast Workspace";
 
-      console.log(error);
-    }
-  };
+      if (
+        pathname.includes(
+          "executive"
+        )
+      )
+        return "Executive Dashboard";
 
+      if (
+        pathname.includes(
+          "reports"
+        )
+      )
+        return "Reports Center";
 
-  useEffect(() => {
+      if (
+        pathname.includes(
+          "notifications"
+        )
+      )
+        return "Notification Center";
 
-    fetchNotifications();
+      if (
+        pathname.includes(
+          "integrations"
+        )
+      )
+        return "Integrations Hub";
 
-    // AUTO REFRESH
+      if (
+        pathname.includes(
+          "organization"
+        )
+      )
+        return "Organization Management";
 
-    const interval = setInterval(() => {
+      if (
+        pathname.includes(
+          "project"
+        )
+      )
+        return "Projects";
+
+      return "AI Forecasting Platform";
+    };
+
+    useEffect(() => {
+
+      const fetchNotifications =
+        async () => {
+
+          try {
+
+            const response =
+              await API.get(
+                "/notifications?page=1&limit=10"
+              );
+
+            setNotifications(
+              response.data || []
+            );
+
+          } catch (error) {
+
+            console.log(error);
+
+          }
+
+        };
 
       fetchNotifications();
 
-    }, 3000);
+    }, []);
 
-    return () => clearInterval(interval);
+  useEffect(() => {
+
+    const handleClickOutside =
+      (event) => {
+
+        if (
+
+          dropdownRef.current &&
+
+          !dropdownRef.current.contains(
+            event.target
+          )
+
+        ) {
+
+          setShowNotifications(
+            false
+          );
+
+        }
+
+      };
+
+    document.addEventListener(
+
+      "mousedown",
+
+      handleClickOutside
+
+    );
+
+    return () => {
+
+      document.removeEventListener(
+
+        "mousedown",
+
+        handleClickOutside
+
+      );
+
+    };
 
   }, []);
 
-
-  // -----------------------------------
-  // LOGOUT
-  // -----------------------------------
-
-  const handleLogout = () => {
-
-    localStorage.removeItem(
-      "token"
-    );
-
-    localStorage.removeItem(
-      "role"
-    );
-
-    localStorage.removeItem(
-      "username"
-    );
-
-    navigate("/login");
-  };
-
-
   return (
 
-    <div className="relative z-[9999] bg-white/70 dark:bg-slate-900 backdrop-blur-md border-b border-white/30 dark:border-slate-700 shadow-sm px-8 py-5 flex justify-between items-center">
+    <div className="sticky top-0 z-40">
 
+      <div className="backdrop-blur-xl bg-white/10 border border-white/10 shadow-xl rounded-3xl px-8 py-5">
 
-      {/* LEFT */}
+        <div className="flex items-center justify-between">
 
-      <div>
+          {/* LEFT */}
 
-        <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+          <div>
 
-          Dashboard
+            <h1 className="text-3xl font-bold text-white">
 
-        </h2>
+              {getPageTitle()}
 
-        <p className="text-gray-500 dark:text-gray-300 mt-1">
+            </h1>
 
-          Welcome back to your AI analytics platform
+            <p className="text-slate-300 text-sm mt-1">
 
-        </p>
+              Enterprise Forecasting &
+              Strategic Intelligence Platform
 
-      </div>
+            </p>
 
+          </div>
 
-      {/* RIGHT */}
+          {/* CENTER */}
 
-      <div className="flex items-center gap-5">
+          <div className="hidden lg:flex items-center w-[450px]">
 
+            <div className="relative w-full">
 
-        {/* NOTIFICATION */}
+              <Search
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              />
 
-        <div className="relative z-[9999]">
+              <input
+                type="text"
+                placeholder="Search forecasts, reports, organizations..."
+                className="
+                  w-full
+                  pl-12
+                  pr-4
+                  py-3
+                  rounded-2xl
+                  bg-white/10
+                  border
+                  border-white/10
+                  text-white
+                  placeholder:text-slate-400
+                  outline-none
+                  focus:ring-2
+                  focus:ring-cyan-500
+                "
+              />
 
+            </div>
 
-          {/* BELL */}
+          </div>
 
-          <button
+          {/* RIGHT */}
 
-            onClick={() =>
+          <div className="flex items-center gap-4">
 
-              setShowNotifications(
+            <div
+              className="relative"
+              ref={dropdownRef}
+            >
 
-                !showNotifications
-              )
-            }
+              <button
 
-            className="relative bg-white dark:bg-slate-800 p-3 rounded-full shadow hover:scale-105 transition"
-          >
+                onClick={() =>
 
-            <Bell className="text-blue-700" />
+                  setShowNotifications(
+                    !showNotifications
+                  )
 
+                }
 
-            {/* BADGE */}
+                className="
+                  relative
+                  p-3
+                  rounded-2xl
+                  bg-white/10
+                  border
+                  border-white/10
+                  hover:bg-white/20
+                  transition-all
+                "
+              >
 
-            {
+                <Bell
+                  size={22}
+                  className="text-white"
+                />
 
-              notifications.length > 0 && (
+                {
 
-                <span className="absolute top-1 right-1 w-5 h-5 bg-red-500 rounded-full text-white text-xs flex items-center justify-center">
+                  unreadCount > 0 && (
 
-                  {notifications.length}
+                    <span
+                      className="
+                        absolute
+                        -top-2
+                        -right-2
+                        bg-red-500
+                        text-white
+                        text-xs
+                        min-w-[22px]
+                        h-[22px]
+                        rounded-full
+                        flex
+                        items-center
+                        justify-center
+                        font-bold
+                      "
+                    >
 
-                </span>
-              )
-            }
+                      {unreadCount}
 
-          </button>
+                    </span>
 
+                  )
 
-          {/* DROPDOWN */}
+                }
 
-          {
+              </button>
 
-            showNotifications && (
+                            {
 
-              <div className="absolute right-0 top-16 w-[380px] bg-white rounded-3xl shadow-2xl p-6 border border-slate-200 z-[99999]">
+                showNotifications && (
 
+                  <div
+                    className="
+                      absolute
+                      right-0
+                      mt-4
+                      w-[420px]
+                      bg-slate-900/95
+                      backdrop-blur-xl
+                      border
+                      border-slate-700
+                      rounded-3xl
+                      shadow-2xl
+                      overflow-hidden
+                      z-50
+                    "
+                  >
 
-                {/* HEADER */}
+                    {/* HEADER */}
 
-                <div className="flex items-center justify-between mb-6">
+                    <div className="p-5 border-b border-slate-700">
 
-                  <h2 className="text-2xl font-bold text-slate-800">
+                      <div className="flex items-center justify-between">
 
-                    Notifications
+                        <h2 className="text-xl font-bold text-white">
 
-                  </h2>
+                          Notifications
 
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-xl text-sm">
+                        </h2>
 
-                    Live
+                        <span className="text-xs text-slate-400">
 
-                  </span>
+                          Live Updates
 
-                </div>
+                        </span>
 
+                      </div>
 
-                {/* LIST */}
+                    </div>
 
-                <div className="space-y-4 max-h-[400px] overflow-y-auto">
+                    {/* BODY */}
 
+                    <div className="max-h-[450px] overflow-y-auto">
+
+                      {
+
+                        notifications.length > 0
+
+                          ?
+
+                          notifications.map(
+
+                            (item) => (
+
+                              <div
+
+                                key={item.id}
+
+                                className="
+                                  p-4
+                                  border-b
+                                  border-slate-800
+                                  hover:bg-white/5
+                                  transition-all
+                                  cursor-pointer
+                                "
+
+                              >
+
+                                <div className="flex items-start justify-between">
+
+                                  <div>
+
+                                    <h3 className="text-white font-semibold">
+
+                                      {item.title}
+
+                                    </h3>
+
+                                    <p className="text-slate-400 text-sm mt-1">
+
+                                      {item.message}
+
+                                    </p>
+
+                                  </div>
+
+                                  {
+
+                                    !item.is_read && (
+
+                                      <div
+                                        className="
+                                          w-3
+                                          h-3
+                                          rounded-full
+                                          bg-cyan-500
+                                          mt-2
+                                        "
+                                      />
+
+                                    )
+
+                                  }
+
+                                </div>
+
+                                <p className="text-xs text-slate-500 mt-3">
+
+                                  {
+
+                                    item.created_at
+
+                                      ?
+
+                                      new Date(
+                                        item.created_at
+                                      ).toLocaleString()
+
+                                      :
+
+                                      ""
+                                  }
+
+                                </p>
+
+                              </div>
+
+                            )
+
+                          )
+
+                          :
+
+                          (
+
+                            <div className="p-8 text-center">
+
+                              <p className="text-slate-400">
+
+                                No notifications available
+
+                              </p>
+
+                            </div>
+
+                          )
+
+                      }
+
+                    </div>
+
+                    {/* FOOTER */}
+
+                    <div className="p-4 border-t border-slate-700">
+
+                      <button
+
+                        onClick={() => {
+
+                          setShowNotifications(
+                            false
+                          );
+
+                          navigate(
+                            "/notifications"
+                          );
+
+                        }}
+
+                        className="
+                          w-full
+                          py-3
+                          rounded-2xl
+                          bg-gradient-to-r
+                          from-cyan-500
+                          to-blue-600
+                          text-white
+                          font-semibold
+                          flex
+                          items-center
+                          justify-center
+                          gap-2
+                        "
+
+                      >
+
+                        <Eye size={18} />
+
+                        View All Notifications
+
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                )
+
+              }
+
+            </div>
+
+            {/* PROFILE */}
+
+            <div
+              className="
+                flex
+                items-center
+                gap-3
+                bg-white/10
+                border
+                border-white/10
+                rounded-2xl
+                px-4
+                py-2
+              "
+            >
+
+              <UserCircle
+                size={34}
+                className="text-cyan-400"
+              />
+
+              <div>
+
+                <p className="text-white font-semibold">
 
                   {
 
-                    notifications.length > 0 ? (
+                    localStorage.getItem(
+                      "username"
+                    ) || "User"
 
-                      notifications.map(
-
-                        (item, index) => (
-
-                          <div
-
-                            key={index}
-
-                            className="bg-slate-100 rounded-2xl p-4 border border-slate-200"
-                          >
-
-                            <h3 className="font-bold text-slate-800 text-lg">
-
-                              {item.title}
-
-                            </h3>
-
-                            <p className="text-slate-600 text-sm mt-2 break-words">
-
-                              {item.message}
-
-                            </p>
-
-                            <p className="text-slate-500 text-xs mt-3">
-
-                              {new Date(
-                                item.created_at
-                              ).toLocaleString()
-                              }
-
-                            </p>
-
-                          </div>
-                        )
-                      )
-
-                    ) : (
-
-                      <p className="text-slate-500">
-
-                        No notifications available.
-
-                      </p>
-                    )
                   }
 
-                </div>
+                </p>
+
+                <p className="text-xs text-slate-400">
+
+                  {
+
+                    localStorage.getItem(
+                      "role"
+                    ) || "Member"
+
+                  }
+
+                </p>
 
               </div>
-            )
-          }
+
+            </div>
+
+            {/* LOGOUT */}
+
+            <button
+
+              onClick={onLogout}
+
+              className="
+                flex
+                items-center
+                gap-2
+                px-5
+                py-3
+                rounded-2xl
+                bg-gradient-to-r
+                from-red-500
+                to-pink-500
+                text-white
+                font-semibold
+                shadow-lg
+                hover:scale-105
+                transition-all
+              "
+
+            >
+
+              <LogOut size={18} />
+
+              Logout
+
+            </button>
+
+          </div>
 
         </div>
-
-
-        {/* LOGOUT */}
-
-        <button
-
-          onClick={handleLogout}
-
-          className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-5 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition"
-        >
-
-          Logout
-
-        </button>
 
       </div>
 
     </div>
+
   );
+
 };
 
 export default Navbar;

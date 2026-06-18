@@ -113,6 +113,54 @@ from app.routers.scenario_routes import (
      router as scenario_router
 )
 
+from app.routers.organization import (
+    router as organization_router
+)
+
+from app.routers.project import (
+    router as project_router
+)
+
+from app.routers.forecast_approval import (
+    router as forecast_approval_router
+)
+
+from app.routers.forecast_governance import (
+    router as forecast_governance_router
+)
+
+from app.routers.workflow_automation import (
+    router as workflow_automation_router
+)
+
+from app.routers.strategic_planning import (
+    router as strategic_planning_router
+)
+
+from app.routers.advanced_kpi import (
+    router as advanced_kpi_router
+)
+
+from app.routers.data_quality import (
+    router as data_quality_router
+)
+
+from app.routers.executive_command_center import (
+    router as executive_command_center_router
+)
+
+from app.models.dashboard_widget import (
+    DashboardWidget
+)
+
+from app.models.dashboard_layout import (
+    DashboardLayout
+)
+
+from app.routers.dashboard_widgets import (
+    router as dashboard_widgets_router
+)
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Advanced AI Demand Forecasting")
@@ -179,6 +227,29 @@ app.include_router(executive_reporting_router)
 app.include_router(activity_log_router)
 
 app.include_router(scenario_router)
+
+app.include_router(organization_router)
+
+app.include_router(project_router)
+
+app.include_router(forecast_approval_router)
+
+app.include_router(forecast_governance_router)
+
+app.include_router(workflow_automation_router)
+
+app.include_router(strategic_planning_router)
+
+app.include_router(advanced_kpi_router)  
+
+app.include_router(data_quality_router)  
+
+app.include_router(executive_command_center_router) 
+
+app.include_router(
+    dashboard_widgets_router
+)
+
 
 @app.get("/")
 def root():

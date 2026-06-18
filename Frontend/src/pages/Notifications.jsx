@@ -217,40 +217,19 @@ const Notifications = () => {
 
   useEffect(() => {
 
-    fetchNotifications();
+  fetchNotifications();
 
-    fetchUnreadCount();
-    fetchSettings();
+  fetchUnreadCount();
 
-    // AUTO REFRESH
+  fetchSettings();
 
-    const interval = setInterval(() => {
-
-      fetchNotifications();
-
-      fetchUnreadCount();
-
-    }, 3000);
-
-    return () => clearInterval(interval);
-
-  }, []);
-
+}, []);
 
   return (
 
     <MainLayout>
 
       <div className="min-h-screen relative overflow-hidden p-8">
-
-
-        {/* BACKGROUND */}
-
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-sky-400 to-indigo-300"></div>
-
-        <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl"></div>
 
 
         {/* CONTENT */}
@@ -260,19 +239,19 @@ const Notifications = () => {
 
           {/* HEADER */}
 
-          <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/30">
+          <div className="bg-gradient-to-r from-fuchsia-600 via-pink-500 to-rose-500 rounded-[35px] p-10 shadow-[0_20px_60px_rgba(236,72,153,0.25)]">
 
             <h1 className="text-5xl font-bold text-slate-800">
 
               <div className="flex items-center gap-4">
 
-                <h1 className="text-5xl font-bold text-slate-800">
+                <h1 className="text-5xl font-bold text-white">
 
                   Notifications
 
                 </h1>
 
-                <span className="bg-red-500 text-white px-4 py-2 rounded-full font-bold">
+                <span className="bg-white text-rose-500 px-4 py-2 rounded-full font-bold shadow-lg">
 
                   {stats.total}
 
@@ -282,7 +261,7 @@ const Notifications = () => {
 
             </h1>
 
-            <p className="text-slate-700 mt-4 text-lg">
+            <p className="text-pink-50 mt-4 text-lg">
 
               Live system activities and updates.
 
@@ -292,7 +271,7 @@ const Notifications = () => {
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-xl">
+            <div className="bg-gradient-to-br from-white to-rose-50 border border-rose-100 rounded-3xl p-8 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
 
               <div className="flex items-center justify-between">
 
@@ -313,7 +292,7 @@ const Notifications = () => {
 
             </div>
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-xl">
+            <div className="bg-gradient-to-br from-white to-rose-50 border border-rose-100 rounded-3xl p-8 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
 
               <div className="flex items-center justify-between">
 
@@ -336,7 +315,7 @@ const Notifications = () => {
 
             </div>
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-xl">
+            <div className="bg-gradient-to-br from-white to-rose-50 border border-rose-100 rounded-3xl p-8 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
 
               <div className="flex items-center justify-between">
 
@@ -359,7 +338,7 @@ const Notifications = () => {
 
             </div>
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-xl">
+            <div className="bg-gradient-to-br from-white to-rose-50 border border-rose-100 rounded-3xl p-8 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
 
               <div className="flex items-center justify-between">
 
@@ -417,10 +396,8 @@ const Notifications = () => {
                       ${
 
                         filter === type
-
-                          ? "bg-blue-600 text-white"
-
-                          : "bg-white/20 text-slate-800"
+                          ? "bg-gradient-to-r from-fuchsia-600 to-rose-500 text-white shadow-lg"
+                          : "bg-white border border-slate-200 text-slate-700 hover:bg-rose-50"
 
                       }
 
@@ -436,7 +413,7 @@ const Notifications = () => {
 
           </div>
           
-          <div className="mt-8 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-3xl p-8 text-white shadow-2xl">
+          <div className="mt-8 bg-gradient-to-r from-fuchsia-600 via-pink-500 to-rose-500 rounded-3xl p-8 text-white shadow-2xl">
 
             <h2 className="text-3xl font-bold">
 
@@ -469,7 +446,7 @@ const Notifications = () => {
 
                       key={index}
 
-                      className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/30"
+                      className="bg-white rounded-3xl p-8 shadow-lg border border-slate-100 hover:shadow-xl transition-all duration-300"
                     >
 
                       <div className="flex items-center justify-between mb-4">
@@ -482,21 +459,11 @@ const Notifications = () => {
 
                         <span
 
-                          className={`
-
-                            px-4 py-2 rounded-xl text-sm font-semibold
-
-                            ${
-
-                              item.is_read
-
-                                ? "bg-green-100 text-green-700"
-
-                                : "bg-red-100 text-red-700"
-
-                            }
-
-                          `}
+                          className={`bg-white rounded-3xl p-8 shadow-lg border-l-4 ${
+                            item.is_read
+                              ? "border-green-500"
+                              : "border-rose-500"
+                          }`}
                         >
 
                           {
@@ -533,7 +500,7 @@ const Notifications = () => {
                                 )
                               }
 
-                              className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-700"
+                              className="bg-gradient-to-r from-fuchsia-600 to-rose-500 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-700"
                             >
 
                               Mark As Read
@@ -558,7 +525,7 @@ const Notifications = () => {
 
               ) : (
 
-                <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/30">
+                <div className="bg-white rounded-3xl p-8 shadow-lg border border-fuchsia-800 hover:shadow-xl transition-all duration-300">
 
                   <p className="text-slate-700 text-lg">
 
@@ -576,17 +543,26 @@ const Notifications = () => {
 
           <div className="mt-12">
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/30">
+            <div className="bg-gradient-to-br from-white to-pink-50 rounded-3xl shadow-xl border border-pink-500">
 
-              <h2 className="text-3xl font-bold text-slate-800 mb-8">
+              <h2 className="text-4xl font-bold text-slate-800 mb-8">
 
-                Email Delivery Center
+                 Email Delivery Center
 
               </h2>
 
-              <div className="space-y-5">
+              <div className="space-y-6">
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="
+                    bg-white
+                    rounded-3xl
+                    p-6
+                    border
+                    border-purple-500
+                    shadow-lg
+                    hover:shadow-xl
+                    transition-all
+                    duration-30">
 
                   <div className="flex justify-between items-center">
 
@@ -622,7 +598,16 @@ const Notifications = () => {
 
                 </div>
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                  <div className="
+                    bg-white
+                    rounded-3xl
+                    p-6
+                    border
+                    border-purple-500
+                    shadow-lg
+                    hover:shadow-xl
+                    transition-all
+                    duration-300">
 
                   <div className="flex justify-between items-center">
 
@@ -658,7 +643,16 @@ const Notifications = () => {
 
                 </div>
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="
+                  bg-white
+                  rounded-3xl
+                  p-6
+                  border
+                  border-purple-500
+                  shadow-lg
+                  hover:shadow-xl
+                  transition-all
+                  duration-300">
 
                   <div className="flex justify-between items-center">
 
@@ -705,7 +699,7 @@ const Notifications = () => {
 
           <div className="mt-12">
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/30">
+            <div className="bg-gradient-to-br from-white to-purple-50 rounded-3xl shadow-xl border border-purple-800 rounded-3xl shadow-2xl p-8 border border-white/30">
 
               <h2 className="text-3xl font-bold text-slate-800 mb-8">
 
@@ -713,9 +707,9 @@ const Notifications = () => {
 
               </h2>
 
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-3 gap-6 mt-8">
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="bg-gradient-to-br from-purple-50 to-pink-100 rounded-2xl p-6 border border-purple-500">
 
                   <h3 className="font-bold text-lg">
 
@@ -738,7 +732,7 @@ const Notifications = () => {
 
                 </div>
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="bg-gradient-to-br from-purple-50 to-pink-100 rounded-2xl p-6 border border-purple-500">
 
                   <h3 className="font-bold text-lg">
 
@@ -761,7 +755,7 @@ const Notifications = () => {
 
                 </div>
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="bg-gradient-to-br from-purple-50 to-pink-100 rounded-2xl p-6 border border-purple-500">
 
                   <h3 className="font-bold text-lg">
 
@@ -803,9 +797,22 @@ const Notifications = () => {
 
               </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="
+                    bg-gradient-to-br
+                    from-rose-50
+                    to-pink-100
+                    rounded-3xl
+                    p-6
+                    border
+                    border-rose-100
+                    shadow-md
+                    hover:shadow-lg
+                    hover:translate-y-1
+                    transition-all
+                    duration-300
+                    ">
 
                   <h3 className="text-xl font-bold text-slate-800">
 
@@ -821,7 +828,20 @@ const Notifications = () => {
 
                 </div>
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="
+                  bg-gradient-to-br
+                  from-purple-50
+                  to-fuchsia-100
+                  rounded-3xl
+                  p-6
+                  border
+                  border-rose-100
+                  shadow-md
+                  hover:shadow-lg
+                  hover:-translate-y-1
+                  transition-all
+                  duration-300
+                  ">
 
                   <h3 className="text-xl font-bold text-slate-800">
 
@@ -837,7 +857,20 @@ const Notifications = () => {
 
                 </div>
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="
+                  bg-gradient-to-br
+                  from-amber-50
+                  to-orange-100
+                  rounded-3xl
+                  p-6
+                  border
+                  border-rose-100
+                  shadow-md
+                  hover:shadow-lg
+                  hover:-translate-y-1
+                  transition-all
+                  duration-300
+                  ">
 
                   <h3 className="text-xl font-bold text-slate-800">
 
@@ -853,7 +886,20 @@ const Notifications = () => {
 
                 </div>
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="
+                  bg-gradient-to-br
+                  from-blue-50
+                  to-cyan-100
+                  rounded-3xl
+                  p-6
+                  border
+                  border-rose-100
+                  shadow-md
+                  hover:shadow-lg
+                  hover:-translate-y-1
+                  transition-all
+                  duration-300
+                  ">
 
                   <h3 className="text-xl font-bold text-slate-800">
 
@@ -869,7 +915,20 @@ const Notifications = () => {
 
                 </div>
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="
+                bg-gradient-to-br
+                from-green-50
+                to-emerald-100
+                rounded-3xl
+                p-6
+                border
+                border-rose-100
+                shadow-md
+                hover:shadow-lg
+                hover:-translate-y-1
+                transition-all
+                duration-300
+                ">
 
                   <h3 className="text-xl font-bold text-slate-800">
 
@@ -885,7 +944,20 @@ const Notifications = () => {
 
                 </div>
 
-                <div className="bg-white/30 rounded-2xl p-6">
+                <div className="
+                  bg-gradient-to-br
+                  from-indigo-50
+                  to-violet-100
+                  rounded-3xl
+                  p-6
+                  border
+                  border-rose-100
+                  shadow-md
+                  hover:shadow-lg
+                  hover:-translate-y-1
+                  transition-all
+                  duration-300
+                  ">
 
                   <h3 className="text-xl font-bold text-slate-800">
 

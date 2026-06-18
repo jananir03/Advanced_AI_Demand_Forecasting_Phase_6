@@ -154,27 +154,22 @@ const ForecastWorkspace = () => {
 
     <MainLayout>
 
-      <div className="min-h-screen relative overflow-hidden p-8">
+      <div className="relative min-h-screen overflow-hidden p-6">
 
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-sky-400 to-indigo-300"></div>
 
-        <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl"></div>
-
-        <div className="relative z-10 max-w-[1600px] mx-auto">
+        <div className="relative z-10 w-full">
 
           {/* HERO */}
 
-          <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/30">
+          <div className="relative z-10 bg-gradient-to-r from-indigo-600 via-blue-500 to-cyan-400 rounded-3xl shadow-xl p-10">
 
-            <h1 className="text-5xl font-bold text-slate-800">
+            <h1 className="text-5xl font-bold text-slate-900">
 
               Forecast Workspace & Collaboration
 
             </h1>
 
-            <p className="text-slate-700 mt-4 text-lg">
+            <p className="text-slate-600 mt-4 text-lg">
 
               Create collaborative forecasting workspaces,
               manage forecast discussions, track activity
@@ -188,11 +183,11 @@ const ForecastWorkspace = () => {
 
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
+            <div className="bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-6 shadow-lg border border-blue-100">
 
               <div className="flex justify-between items-center">
 
-                <h3 className="font-semibold text-slate-700">
+                <h3 className="font-semibold text-slate-600">
 
                   Workspaces
 
@@ -202,7 +197,7 @@ const ForecastWorkspace = () => {
 
               </div>
 
-              <h1 className="text-4xl font-bold mt-4">
+              <h1 className="text-4xl font-bold mt-4 text-slate-900">
 
                 {workspaces.length}
 
@@ -210,11 +205,10 @@ const ForecastWorkspace = () => {
 
             </div>
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
-
+            <div className="bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-6 shadow-lg border border-blue-100">
               <div className="flex justify-between items-center">
 
-                <h3 className="font-semibold text-slate-700">
+                <h3 className="font-semibold text-slate-600">
 
                   Activities
 
@@ -224,7 +218,7 @@ const ForecastWorkspace = () => {
 
               </div>
 
-              <h1 className="text-4xl font-bold mt-4">
+              <h1 className="text-4xl font-bold mt-4 text-slate-900">
 
                 {timeline.length}
 
@@ -232,11 +226,11 @@ const ForecastWorkspace = () => {
 
             </div>
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
+            <div className="bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-6 shadow-lg border border-blue-100">
 
               <div className="flex justify-between items-center">
 
-                <h3 className="font-semibold text-slate-700">
+                <h3 className="font-semibold text-slate-600">
 
                   Collaboration Notes
 
@@ -246,7 +240,7 @@ const ForecastWorkspace = () => {
 
               </div>
 
-              <h1 className="text-4xl font-bold mt-4">
+              <h1 className="text-4xl font-bold mt-4 text-slate-900">
 
                 {comments.length}
 
@@ -258,13 +252,13 @@ const ForecastWorkspace = () => {
 
                     {/* CREATE WORKSPACE */}
 
-          <div className="mt-10 bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/30">
+          <div className="mt-10 bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-100 backdrop-blur-xl border border-blue-100 backdrop-blur-xl border border-white/50 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-slate-700/50">
 
             <div className="flex items-center gap-3 mb-8">
 
               <Plus size={30} />
 
-              <h2 className="text-3xl font-bold text-slate-800">
+              <h2 className="text-3xl font-bold text-slate-900">
 
                 Create Workspace
 
@@ -276,7 +270,7 @@ const ForecastWorkspace = () => {
 
               <div>
 
-                <label className="font-semibold text-slate-700">
+                <label className="font-semibold text-slate-600">
 
                   Workspace Name
 
@@ -309,7 +303,7 @@ const ForecastWorkspace = () => {
 
               <div>
 
-                <label className="font-semibold text-slate-700">
+                <label className="font-semibold text-slate-600">
 
                   Description
 
@@ -346,7 +340,7 @@ const ForecastWorkspace = () => {
 
               onClick={createWorkspace}
 
-              className="mt-8 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg"
+              className="mt-8 bg-blue-600 hover:bg-blue-700 text-slate-900 px-8 py-4 rounded-2xl font-semibold shadow-lg"
 
             >
 
@@ -358,13 +352,13 @@ const ForecastWorkspace = () => {
 
           {/* ACTIVE WORKSPACES */}
 
-          <div className="mt-10 bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/30">
+          <div className="mt-10 bg-gradient-to-br from-slate-50 to-blue-50 backdrop-blur-xl border border-blue-100 backdrop-blur-xl border border-white/50  backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-slate-700/50">
 
             <div className="flex items-center gap-3 mb-8">
 
               <Briefcase size={30} />
 
-              <h2 className="text-3xl font-bold text-slate-800">
+              <h2 className="text-3xl font-bold text-slate-900">
 
                 Active Workspaces
 
@@ -378,11 +372,11 @@ const ForecastWorkspace = () => {
 
                 <div className="overflow-x-auto">
 
-                  <table className="w-full">
+                  <table className="w-full text-slate-700">
 
                     <thead>
 
-                      <tr className="border-b border-slate-300">
+                      <tr className="border-b border-slate-200">
 
                         <th className="text-left p-4">
 
@@ -430,7 +424,7 @@ const ForecastWorkspace = () => {
 
                               key={workspace.id}
 
-                              className="border-b border-slate-200"
+                              className="border-b border-slate-800 hover:bg-slate-800/30"
 
                             >
 
@@ -521,13 +515,13 @@ const ForecastWorkspace = () => {
 
             {/* COLLABORATION NOTES */}
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/30">
+            <div className="bg-gradient-to-br from-violet-50 to-purple-100 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-slate-700/50">
 
               <div className="flex items-center gap-3 mb-6">
 
                 <MessageSquare size={28} />
 
-                <h2 className="text-3xl font-bold text-slate-800">
+                <h2 className="text-3xl font-bold text-slate-900">
 
                   Collaboration Notes
 
@@ -553,7 +547,7 @@ const ForecastWorkspace = () => {
 
                         >
 
-                          <p className="text-slate-800 font-medium">
+                          <p className="text-slate-900 font-medium">
 
                             {
 
@@ -608,13 +602,13 @@ const ForecastWorkspace = () => {
 
             {/* ACTIVITY TIMELINE */}
 
-            <div className="bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/30">
+            <div className="bg-gradient-to-br from-cyan-50 to-blue-100 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-slate-700/50">
 
               <div className="flex items-center gap-3 mb-6">
 
                 <Activity size={28} />
 
-                <h2 className="text-3xl font-bold text-slate-800">
+                <h2 className="text-3xl font-bold text-slate-900">
 
                   Activity Timeline
 
@@ -640,15 +634,15 @@ const ForecastWorkspace = () => {
 
                         >
 
-                          <p className="text-slate-800 font-medium">
-
-                            {
-
-                              item.activity
-
-                            }
-
-                          </p>
+                         <div className="flex items-start gap-3">
+                          <div className="w-3 h-3 mt-2 rounded-full bg-cyan-400"></div>
+                          <div>
+                            <p>{item.activity}</p>
+                            <p className="text-xs text-slate-400 mt-1">
+                              {new Date(item.created_at).toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
 
                           <div className="mt-3 text-sm text-slate-600">
 

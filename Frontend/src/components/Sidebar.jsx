@@ -11,224 +11,388 @@ import {
   Users,
   GitBranch,
   Briefcase,
-  BarChart3
+  BarChart3,
+  Building2,
+  FolderKanban,
+  CheckCircle2,
+  Shield,
+  Workflow,
+  Target,
+  Activity,
+  Command,
+  PanelsTopLeft,
+  Settings
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
 
-  // -----------------------------------
-  // ROLE
-  // -----------------------------------
-
   const role = localStorage.getItem(
     "role"
   );
 
   const menuClass = ({ isActive }) =>
-  `flex items-center gap-4 px-5 py-4 rounded-2xl transition duration-300 font-medium ${
-    isActive
-      ? "bg-blue-600 to indigo-600 text-white shadow-lg"
-      : "hover:bg-white/10"
-  }`;
-  
+    `flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 font-medium ${
+      isActive
+        ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-xl"
+        : "text-slate-300 hover:bg-white/10 hover:text-white"
+    }`;
 
   return (
 
-    <div className="w-72 h-screen fixed left-0 top-0 bg-slate-900 text-white shadow-2xl p-6 overflow-y-auto z-50">
+    <div className="w-80 h-screen fixed left-0 top-0 bg-[#0F172A] text-white shadow-2xl overflow-y-scroll overflow-x-hidden z-50 border-r border-slate-800">
 
-      {/* Blur Background */}
+      {/* GLOWS */}
 
-      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
 
-      <div className="absolute bottom-0 right-0 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl"></div>
+      <div className="absolute top-1/3 right-0 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
 
-      {/* Logo */}
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
 
-      <div className="relative z-10 mb-14">
+      {/* HEADER */}
 
-        <h1 className="text-3xl font-extrabold">
+      <div className="relative z-10 p-8 border-b border-slate-800">
 
-          AI Forecast
+        <h1 className="text-3xl font-extrabold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+
+          AI Forecasting
 
         </h1>
 
-        <p className="text-gray-300 mt-2 text-sm">
+        <p className="text-slate-400 text-sm mt-2">
 
-          Welcome {
-
-            localStorage.getItem(
-              "username"
-            )
-
-              ?
-
-              localStorage
-                .getItem("username")
-                .charAt(0)
-                .toUpperCase()
-
-              +
-
-              localStorage
-                .getItem("username")
-                .slice(1)
-
-              :
-
-              "User"
-          }         
+          Enterprise Suite v6.0
 
         </p>
 
+        <div className="mt-5 bg-slate-800/60 rounded-2xl p-4">
+
+          <p className="text-xs text-slate-400">
+
+            Logged In As
+
+          </p>
+
+          <p className="font-semibold mt-1">
+
+            {
+
+              localStorage.getItem("username")
+
+                ?
+
+                localStorage
+                  .getItem("username")
+                  .charAt(0)
+                  .toUpperCase()
+
+                +
+
+                localStorage
+                  .getItem("username")
+                  .slice(1)
+
+                :
+
+                "User"
+            }
+
+          </p>
+
+        </div>
+
       </div>
 
-      {/* Menu */}
+      <div className="relative z-10 p-6">
 
-      <nav className="relative z-10 space-y-3">
+        {/* EXECUTIVE */}
 
-        <NavLink
-          to="/executive-dashboard"
-          className={menuClass}
-        >
-          <BarChart3 size={22} />
-          Executive Dashboard
-        </NavLink>
+        <div className="mb-8">
 
-        {/* Dashboard */}
+          <p className="text-cyan-400 text-xs font-bold tracking-widest mb-3">
 
-        <NavLink
-          to="/dashboard"
-          className={menuClass}
-        >
-          <LayoutDashboard size={22} />
-          Dashboard
-        </NavLink>
+            EXECUTIVE
 
-        <NavLink
-          to="/scenario-planning"
-          className={menuClass}
-        >
-          <GitBranch size={22} />
-          What-If Analysis
-        </NavLink>
+          </p>
 
+          <nav className="space-y-2">
 
-        {/* Upload Dataset */}
+            <NavLink
+              to="/executive-command-center"
+              className={menuClass}
+            >
+              <Command size={20} />
+              Executive Command Center
+            </NavLink>
 
-        {(role === "super_admin" ||
+            <NavLink
+              to="/executive-dashboard"
+              className={menuClass}
+            >
+              <BarChart3 size={20} />
+              Executive Dashboard
+            </NavLink>
 
-          role === "analyst") && (
+            <NavLink
+              to="/dashboard-widgets"
+              className={menuClass}
+            >
+              <PanelsTopLeft size={20} />
+              Dashboard Widgets
+            </NavLink>
 
-          <NavLink
-            to="/upload"
-            className={menuClass}
-          >
-            <Upload size={22} />
-            Upload Dataset
-          </NavLink>
-        )}
+            <NavLink
+              to="/reports"
+              className={menuClass}
+            >
+              <FileText size={20} />
+              Reports
+            </NavLink>
 
-        {/* Forecast */}
+          </nav>
 
-        {(role === "super_admin" ||
+        </div>
 
-          role === "analyst") && (
+        {/* FORECASTING */}
 
-          <NavLink
-            to="/forecast"
-            className={menuClass}
-          >
-            <LineChart size={22} />
-            Forecast
-          </NavLink>
-        )}
+        <div className="mb-8">
 
-        {(role === "super_admin" ||
+          <p className="text-blue-400 text-xs font-bold tracking-widest mb-3">
 
-          role === "analyst") && (
+            FORECASTING
 
-        <NavLink
-          to="/forecast-scheduler"
-          className={menuClass}
-        >
-            <CalendarClock size={22} />
-            Forecast Scheduler
-          </NavLink>
-        )}
+          </p>
 
-        {/* Reports */}
+          <nav className="space-y-2">
 
-        <NavLink
-          to="/reports"
-          className={menuClass}
-        >
-          <FileText size={22} />
-          Reports
-        </NavLink>
+            <NavLink
+              to="/forecast"
+              className={menuClass}
+            >
+              <LineChart size={20} />
+              Forecast
+            </NavLink>
 
-        <NavLink
-          to="/ai-features"
-          className={menuClass}
-        >
-          <BrainCircuit size={22} />
-          AI Features
-        </NavLink>
+            <NavLink
+              to="/scenario-planning"
+              className={menuClass}
+            >
+              <GitBranch size={20} />
+              Scenario Planning
+            </NavLink>
 
-        <NavLink
-          to="/integrations"
-          className={menuClass}
-        >
-         <Plug size={22} />
-          Integrations
-        </NavLink>
+            <NavLink
+              to="/forecast-workspace"
+              className={menuClass}
+            >
+              <Briefcase size={20} />
+              Forecast Workspace
+            </NavLink>
 
-        <NavLink
-          to="/forecast-workspace"
-          className={menuClass}
-        >
-         <Briefcase size={22} />
-          Forecast Workspaces
-        </NavLink>
+            <NavLink
+              to="/forecast-scheduler"
+              className={menuClass}
+            >
+              <CalendarClock size={20} />
+              Forecast Scheduler
+            </NavLink>
 
+            <NavLink
+              to="/forecast-approval"
+              className={menuClass}
+            >
+              <CheckCircle2 size={20} />
+              Forecast Approval
+            </NavLink>
 
-          
-        {/* Notifications */}
+            <NavLink
+              to="/forecast-governance"
+              className={menuClass}
+            >
+              <Shield size={20} />
+              Forecast Governance
+            </NavLink>
 
-        <NavLink
-          to="/notifications"
-          className={menuClass}
-        >
-          <Bell size={22} />
-          Notifications
-        </NavLink>
+          </nav>
 
-        <NavLink
-          to="/user-management"
-          className={menuClass}
-        >
-          <Users size={22} />
-          User Management
-        </NavLink>
+        </div>
 
-        {/* Admin */}
+                {/* INTELLIGENCE */}
 
-        {role === "super_admin" && (
+        <div className="mb-8">
 
-          <NavLink
-            to="/admin"
-            className={menuClass}
-          >
-            <ShieldCheck size={22} />
-            Admin
-          </NavLink>
-        )}
+          <p className="text-purple-400 text-xs font-bold tracking-widest mb-3">
 
-      </nav>
+            INTELLIGENCE
+
+          </p>
+
+          <nav className="space-y-2">
+
+            <NavLink
+              to="/ai-features"
+              className={menuClass}
+            >
+              <BrainCircuit size={20} />
+              AI Insights
+            </NavLink>
+
+            <NavLink
+              to="/strategic-planning"
+              className={menuClass}
+            >
+              <Target size={20} />
+              Strategic Planning
+            </NavLink>
+
+            <NavLink
+              to="/kpi-management"
+              className={menuClass}
+            >
+              <Activity size={20} />
+              KPI Management
+            </NavLink>
+
+            <NavLink
+              to="/data-quality"
+              className={menuClass}
+            >
+              <ShieldCheck size={20} />
+              Data Quality
+            </NavLink>
+
+          </nav>
+
+        </div>
+
+        {/* ORGANIZATION */}
+
+        <div className="mb-8">
+
+          <p className="text-green-400 text-xs font-bold tracking-widest mb-3">
+
+            ORGANIZATION
+
+          </p>
+
+          <nav className="space-y-2">
+
+            <NavLink
+              to="/organizations"
+              className={menuClass}
+            >
+              <Building2 size={20} />
+              Organizations
+            </NavLink>
+
+            <NavLink
+              to="/projects"
+              className={menuClass}
+            >
+              <FolderKanban size={20} />
+              Projects
+            </NavLink>
+
+            <NavLink
+              to="/upload"
+              className={menuClass}
+            >
+              <Upload size={20} />
+              Dataset Management
+            </NavLink>
+
+            <NavLink
+              to="/integrations"
+              className={menuClass}
+            >
+              <Plug size={20} />
+              Integrations
+            </NavLink>
+
+          </nav>
+
+        </div>
+
+        {/* PLATFORM */}
+
+        <div className="mb-8">
+
+          <p className="text-orange-400 text-xs font-bold tracking-widest mb-3">
+
+            PLATFORM
+
+          </p>
+
+          <nav className="space-y-2">
+
+            <NavLink
+              to="/dashboard"
+              className={menuClass}
+            >
+              <LayoutDashboard size={20} />
+              Dashboard
+            </NavLink>
+
+            <NavLink
+              to="/workflow-automation"
+              className={menuClass}
+            >
+              <Workflow size={20} />
+              Workflow Automation
+            </NavLink>
+
+            <NavLink
+              to="/notifications"
+              className={menuClass}
+            >
+              <Bell size={20} />
+              Notifications
+            </NavLink>
+
+            <NavLink
+              to="/user-management"
+              className={menuClass}
+            >
+              <Users size={20} />
+              User Management
+            </NavLink>
+
+            {
+
+              role === "super_admin" && (
+
+                <NavLink
+                  to="/admin"
+                  className={menuClass}
+                >
+                  <ShieldCheck size={20} />
+                  Admin Center
+                </NavLink>
+
+              )
+
+            }
+
+            <NavLink
+              to="/settings"
+              className={menuClass}
+            >
+              <Settings size={20} />
+              Settings
+            </NavLink>
+
+          </nav>
+
+        </div>
+
+      </div>
 
     </div>
+
   );
+
 };
 
 export default Sidebar;

@@ -42,6 +42,26 @@ import ForecastWorkspace from "../pages/ForecastWorkspace";
 
 import ExecutiveDashboard from "../pages/ExecutiveDashboard";
 
+import Organizations from "../pages/Organizations";
+
+import Projects from "../pages/Projects";
+
+import ForecastApproval from "../pages/ForecastApproval";
+
+import ForecastGovernance from "../pages/ForecastGovernance";
+
+import StrategicPlanning from "../pages/StrategicPlanning";
+
+import AdvancedKPI from "../pages/AdvancedKPI";
+
+import DataQuality from "../pages/DataQuality";
+
+import WorkflowAutomation from "../pages/WorkflowAutomation";
+
+import ExecutiveCommandCenter from "../pages/ExecutiveCommandCenter";
+
+import DashboardWidgets from "../pages/DashboardWidgets";
+
 // -----------------------------------
 // Protected Route
 // -----------------------------------
@@ -238,7 +258,89 @@ const AppRoutes = () => {
           element={<ExecutiveDashboard />}
         />
 
-      </Routes>
+        <Route
+          path="/organizations"
+          element={
+            <ProtectedRoute>
+              <Organizations />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/projects"
+          element={
+            <ProtectedRoute>
+              <Projects />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/forecast-approval"
+          element={
+            <ProtectedRoute>
+              <ForecastApproval />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/forecast-governance"
+          element={<ForecastGovernance />}
+        />
+
+        <Route
+          path="/strategic-planning"
+          element={
+            <ProtectedRoute>
+              <StrategicPlanning />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/kpi-management"
+          element={
+            <ProtectedRoute>
+              <AdvancedKPI />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/data-quality"
+          element={
+            <ProtectedRoute>
+              <DataQuality />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/workflow-automation"
+          element={
+            <ProtectedRoute>
+              <WorkflowAutomation />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/executive-command-center"
+          element={
+            <ProtectedRoute>
+              <ExecutiveCommandCenter />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard-widgets"
+          element={<DashboardWidgets />}
+        />
+              
+        </Routes>
 
     </BrowserRouter>
   );

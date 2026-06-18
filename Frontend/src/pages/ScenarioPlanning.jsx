@@ -208,15 +208,9 @@ const ScenarioPlanning = () => {
 
     <MainLayout>
 
-      <div className="relative overflow-hidden min-h-screen p-8">
+      <div className="relative min-h-screen p-8 bg-gradient-to-br from-slate-950 via-indigo-950 ">
 
-        {/* Background */}
-
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-sky-400 to-indigo-300"></div>
-
-        <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl"></div>
+    
 
         {/* Content */}
 
@@ -224,7 +218,7 @@ const ScenarioPlanning = () => {
 
           {/* Hero Section */}
 
-          <div className="bg-white/40 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20">
+          <div className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 text-white rounded-[35px] p-10 shadow-xl border border-white/20">
 
             <div className="flex items-center gap-4">
 
@@ -232,18 +226,18 @@ const ScenarioPlanning = () => {
 
                 size={42}
 
-                className="text-blue-700"
+                className="text-violet-600"
               />
 
               <div>
 
-                <h1 className="text-5xl font-bold text-blue-950">
+                <h1 className="text-5xl font-bold text-white">
 
                   Advanced Scenario Planning
 
                 </h1>
 
-                <p className="text-slate-700 text-xl mt-3">
+                <p className="text-slate-300 text-xl mt-3">
 
                   Simulate business outcomes using AI-powered
                   What-If Analysis and forecast adjustments.
@@ -258,76 +252,76 @@ const ScenarioPlanning = () => {
 
             <div className="grid md:grid-cols-4 gap-6 mt-10">
 
-              <div className="bg-white rounded-3xl p-6 shadow-lg">
+              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20">
 
                 <TrendingUp
                   className="text-green-600 mb-3"
                 />
 
-                <p className="text-slate-600">
+                <p className="text-slate-300">
 
                   Demand Growth
 
                 </p>
 
-                <h2 className="text-4xl font-bold text-blue-950 mt-2">
+                <h2 className="text-4xl font-bold text-white mt-2">
 
                   +24%
                 </h2>
 
               </div>
 
-              <div className="bg-white rounded-3xl p-6 shadow-lg">
+              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20">
 
                 <DollarSign
                   className="text-yellow-600 mb-3"
                 />
 
-                <p className="text-slate-600">
+                <p className="text-slate-300">
 
                   Revenue Impact
 
                 </p>
 
-                <h2 className="text-4xl font-bold text-blue-950 mt-2">
+                <h2 className="text-4xl font-bold text-white mt-2">
 
                   +18%
                 </h2>
 
               </div>
 
-              <div className="bg-white rounded-3xl p-6 shadow-lg">
+              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20">
 
                 <Package
                   className="text-cyan-600 mb-3"
                 />
 
-                <p className="text-slate-600">
+                <p className="text-slate-300">
 
                   Inventory Effect
 
                 </p>
 
-                <h2 className="text-4xl font-bold text-blue-950 mt-2">
+                <h2 className="text-4xl font-bold text-white mt-2">
 
                   -5%
                 </h2>
 
               </div>
 
-              <div className="bg-white rounded-3xl p-6 shadow-lg">
+              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20">
 
                 <AlertTriangle
                   className="text-red-500 mb-3"
                 />
 
-                <p className="text-slate-600">
+                <p className="text-slate-300">
 
                   Risk Score
 
                 </p>
 
-                <h2 className="text-4xl font-bold text-blue-950 mt-2">
+                <h2 className="text-4xl font-bold text-white mt-2">
 
                   12%
                 </h2>
@@ -340,9 +334,9 @@ const ScenarioPlanning = () => {
 
                     {/* Scenario Inputs */}
 
-          <div className="bg-white/40 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20 mt-8">
+          <div className="bg-white/80 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20 mt-8">
 
-            <h2 className="text-3xl font-bold text-blue-950 mb-8">
+            <h2 className="text-3xl font-bold text-slate-900 mb-8">
 
               What-If Analysis Inputs
 
@@ -405,7 +399,7 @@ const ScenarioPlanning = () => {
                   className="w-full mt-4"
                 />
 
-                <h3 className="text-3xl font-bold text-blue-950 mt-4">
+                <h3 className="text-3xl font-bold text-slate-900 mt-4">
 
                   {demandChange}%
 
@@ -415,7 +409,7 @@ const ScenarioPlanning = () => {
 
               {/* Price Impact */}
 
-              <div className="bg-white rounded-3xl p-6 shadow-lg">
+              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20">
 
                 <label className="font-semibold text-slate-700">
 
@@ -444,7 +438,7 @@ const ScenarioPlanning = () => {
                   className="w-full mt-4"
                 />
 
-                <h3 className="text-3xl font-bold text-blue-950 mt-4">
+                <h3 className="text-3xl font-bold text-slate-900 mt-4">
 
                   {priceImpact}%
 
@@ -454,7 +448,7 @@ const ScenarioPlanning = () => {
 
               {/* Inventory Impact */}
 
-              <div className="bg-white rounded-3xl p-6 shadow-lg">
+              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20">
 
                 <label className="font-semibold text-slate-700">
 
@@ -483,7 +477,7 @@ const ScenarioPlanning = () => {
                   className="w-full mt-4"
                 />
 
-                <h3 className="text-3xl font-bold text-blue-950 mt-4">
+                <h3 className="text-3xl font-bold text-slate-900 mt-4">
 
                   {inventoryImpact}%
 
@@ -497,9 +491,9 @@ const ScenarioPlanning = () => {
 
                     {/* Scenario Outcomes */}
 
-          <div className="bg-white/40 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20 mt-8">
+          <div className="bg-white/80 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20 mt-8">
 
-            <h2 className="text-3xl font-bold text-blue-950 mb-8">
+            <h2 className="text-3xl font-bold text-slate-900 mb-8">
 
               Scenario Forecast Outcomes
 
@@ -582,9 +576,9 @@ const ScenarioPlanning = () => {
 
                     {/* Executive Impact Analysis */}
 
-          <div className="bg-white/40 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20 mt-8">
+          <div className="bg-white/80 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20 mt-8">
 
-            <h2 className="text-3xl font-bold text-blue-950 mb-8">
+            <h2 className="text-3xl font-bold text-slate-900 mb-8">
 
               Executive Impact Analysis
 
@@ -594,7 +588,7 @@ const ScenarioPlanning = () => {
 
               {/* Revenue Impact */}
 
-              <div className="bg-white rounded-3xl p-6 shadow-lg">
+              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-3xl p-6 shadow-lg border border-emerald-200">
 
                 <DollarSign
                   size={35}
@@ -607,7 +601,7 @@ const ScenarioPlanning = () => {
 
                 </p>
 
-                <h2 className="text-4xl font-bold text-blue-950 mt-2">
+                <h2 className="text-4xl font-bold text-slate-900 mt-2">
 
                   {(
                     expectedForecast *
@@ -620,7 +614,7 @@ const ScenarioPlanning = () => {
 
               {/* Demand Impact */}
 
-              <div className="bg-white rounded-3xl p-6 shadow-lg">
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-6 shadow-lg border border-cyan-200">
 
                 <TrendingUp
                   size={35}
@@ -633,7 +627,7 @@ const ScenarioPlanning = () => {
 
                 </p>
 
-                <h2 className="text-4xl font-bold text-blue-950 mt-2">
+                <h2 className="text-4xl font-bold text-slate-900 mt-2">
 
                   {demandChange}%
 
@@ -643,7 +637,7 @@ const ScenarioPlanning = () => {
 
               {/* Inventory Impact */}
 
-              <div className="bg-white rounded-3xl p-6 shadow-lg">
+              <div className="bg-gradient-to-br from-violet-50 to-purple-100 rounded-3xl p-6 shadow-lg border border-violet-200">
 
                 <Package
                   size={35}
@@ -656,7 +650,7 @@ const ScenarioPlanning = () => {
 
                 </p>
 
-                <h2 className="text-4xl font-bold text-blue-950 mt-2">
+                <h2 className="text-4xl font-bold text-slate-900 mt-2">
 
                   {inventoryImpact}%
 
@@ -666,7 +660,7 @@ const ScenarioPlanning = () => {
 
               {/* Risk Score */}
 
-              <div className="bg-white rounded-3xl p-6 shadow-lg">
+              <div className="bg-gradient-to-br from-rose-50 to-pink-100 rounded-3xl p-6 shadow-lg border border-rose-200">
 
                 <AlertTriangle
                   size={35}
@@ -679,7 +673,7 @@ const ScenarioPlanning = () => {
 
                 </p>
 
-                <h2 className="text-4xl font-bold text-blue-950 mt-2">
+                <h2 className="text-4xl font-bold text-slate-900 mt-2">
 
                   {Math.abs(
                     inventoryImpact
@@ -695,9 +689,9 @@ const ScenarioPlanning = () => {
 
                     {/* Forecast Comparison */}
 
-          <div className="bg-white/40 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20 mt-8">
+          <div className="bg-white/80 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20 mt-8">
 
-            <h2 className="text-3xl font-bold text-blue-950 mb-8">
+            <h2 className="text-3xl font-bold text-slate-900 mb-8">
 
               Forecast Comparison
 
@@ -707,7 +701,7 @@ const ScenarioPlanning = () => {
 
               <table className="w-full bg-white rounded-3xl overflow-hidden">
 
-                <thead className="bg-blue-600 text-white">
+                <thead className="bg-gradient-to-r from-slate-800 to-slate-700 text-white">
 
                   <tr>
 
@@ -789,11 +783,11 @@ const ScenarioPlanning = () => {
 
           {/* Scenario History */}
 
-          <div className="bg-white/40 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20 mt-8">
+          <div className="bg-white/80 backdrop-blur-xl rounded-[35px] p-10 shadow-xl border border-white/20 mt-8">
 
             <div className="flex justify-between items-center mb-8">
 
-              <h2 className="text-3xl font-bold text-blue-950">
+              <h2 className="text-3xl font-bold text-slate-900">
 
                 Saved Scenario History
 
@@ -811,7 +805,7 @@ const ScenarioPlanning = () => {
 
               <table className="w-full bg-white rounded-3xl overflow-hidden">
 
-                <thead className="bg-blue-600 text-white">
+                <thead className="bg-gradient-to-r from-slate-800 to-slate-700 text-white">
 
                   <tr>
 
@@ -951,7 +945,7 @@ const ScenarioPlanning = () => {
 
               onClick={saveScenario}
 
-              className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-10 py-4 rounded-2xl font-bold shadow-xl hover:scale-105 transition-all"
+              className="bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-700 text-white px-10 py-4 rounded-2xl font-bold shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300"
 
             >
 

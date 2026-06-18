@@ -114,17 +114,6 @@ const Admin = () => {
 
       <div className="relative overflow-hidden px-4 p-8">
 
-
-        {/* Background */}
-
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-sky-400 to-indigo-300"></div>
-
-        <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl"></div>
-
-
-
         {/* Main Content */}
 
         <div className="relative z-10 space-y-8">

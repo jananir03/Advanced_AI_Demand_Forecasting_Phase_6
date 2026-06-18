@@ -5,13 +5,12 @@ import MainLayout from "../layouts/MainLayout";
 import API from "../services/api";
 
 import {
-
   UploadCloud,
-
   Database,
-
-  Search
-
+  Search,
+  History,
+  Archive,
+  Plus
 } from "lucide-react";
 
 const UploadDataset = () => {
@@ -27,21 +26,42 @@ const UploadDataset = () => {
   const [datasets, setDatasets] =
     useState([]);
 
+  const [versions, setVersions] =
+    useState([]);
+
   const [searchTerm,
     setSearchTerm] =
     useState("");
 
+  const [selectedDataset,
+    setSelectedDataset] =
+    useState("");
+
+  const [versionName,
+    setVersionName] =
+    useState("");
+
+  const [creatingVersion,
+    setCreatingVersion] =
+    useState(false);
+
 
   // -----------------------------------
-  // Fetch Datasets
+  // Initial Load
   // -----------------------------------
 
   useEffect(() => {
 
     fetchDatasets();
 
+    fetchVersions();
+
   }, []);
 
+
+  // -----------------------------------
+  // Fetch Datasets
+  // -----------------------------------
 
   const fetchDatasets = async () => {
 
@@ -53,6 +73,30 @@ const UploadDataset = () => {
         );
 
       setDatasets(
+        response.data
+      );
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
+
+
+  // -----------------------------------
+  // Fetch Versions
+  // -----------------------------------
+
+  const fetchVersions = async () => {
+
+    try {
+
+      const response =
+        await API.get(
+          "/dataset-versioning/"
+        );
+
+      setVersions(
         response.data
       );
 
@@ -84,7 +128,7 @@ const UploadDataset = () => {
 
 
   // -----------------------------------
-  // Handle Upload
+  // Upload Dataset
   // -----------------------------------
 
   const handleUpload = async () => {
@@ -120,9 +164,7 @@ const UploadDataset = () => {
           formData,
 
           {
-
             headers: {
-
               "Content-Type":
                 "multipart/form-data",
             },
@@ -152,6 +194,99 @@ const UploadDataset = () => {
 
 
   // -----------------------------------
+  // Create Version
+  // -----------------------------------
+
+  const handleCreateVersion =
+    async () => {
+
+      if (
+        !selectedDataset ||
+        !versionName
+      ) {
+
+        setError(
+          "Select dataset and enter version name"
+        );
+
+        return;
+      }
+
+      try {
+
+        setCreatingVersion(
+          true
+        );
+
+        await API.post(
+
+          "/dataset-versioning/create",
+
+          {
+
+            dataset_id:
+              parseInt(
+                selectedDataset
+              ),
+
+            version_name:
+              versionName,
+
+            uploaded_by: 1
+
+          }
+        );
+
+        setVersionName("");
+
+        setSelectedDataset("");
+
+        fetchVersions();
+
+        setMessage(
+          "Dataset version created successfully"
+        );
+
+      } catch (error) {
+
+        setError(
+          "Failed to create version"
+        );
+
+      } finally {
+
+        setCreatingVersion(
+          false
+        );
+      }
+    };
+
+
+  // -----------------------------------
+  // Archive Version
+  // -----------------------------------
+
+  const handleArchiveVersion =
+    async (versionId) => {
+
+      try {
+
+        await API.put(
+
+          `/dataset-versioning/archive/${versionId}`
+
+        );
+
+        fetchVersions();
+
+      } catch (error) {
+
+        console.log(error);
+      }
+    };
+
+
+  // -----------------------------------
   // Drag & Drop
   // -----------------------------------
 
@@ -177,20 +312,20 @@ const UploadDataset = () => {
 
     <MainLayout>
 
-      <div className="max-w-7xl mx-auto space-y-10">
+      <div className="w-full px-6 space-y-10">
 
 
         {/* Heading */}
 
         <div>
 
-          <h1 className="text-6xl font-bold text-blue-950">
+          <h1 className="text-6xl font-bold text-white-950">
 
             Upload Dataset
 
           </h1>
 
-          <p className="text-slate-700 text-xl mt-4">
+          <p className="text-white-700 text-xl mt-4">
 
             Upload CSV or Excel datasets for AI forecasting analysis.
 
@@ -201,14 +336,12 @@ const UploadDataset = () => {
 
         {/* Upload Card */}
 
-        <div className="bg-white/80 backdrop-blur-lg rounded-[40px] shadow-2xl p-14">
+        <div className="bg-white/80 backdrop-blur-lg rounded-[32px] shadow-xl p-8">
 
-
-          {/* Drag & Drop */}
 
           <div
 
-            className="border-4 border-dashed border-blue-300 rounded-[40px] p-20 text-center bg-blue-50/40 hover:bg-blue-100/40 transition duration-300"
+            className="border-2 border-dashed border-blue-300 rounded-[28px] p-10 text-center bg-blue-50/40 hover:bg-blue-100/40 transition duration-300"
 
             onDragOver={(e) =>
               e.preventDefault()
@@ -217,17 +350,12 @@ const UploadDataset = () => {
             onDrop={handleDrop}
           >
 
+              <div className="flex justify-center mb-10">
 
-            {/* Upload Icon */}
-
-            <div className="flex justify-center mb-10">
-
-              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-8 rounded-full shadow-xl">
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-4 rounded-full shadow-xl">
 
                 <UploadCloud
-
-                  size={70}
-
+                  size={40}
                   className="text-white"
                 />
 
@@ -236,15 +364,13 @@ const UploadDataset = () => {
             </div>
 
 
-            {/* Heading */}
-
-            <h2 className="text-5xl font-bold text-blue-950">
+            <h2 className="text-3xl font-bold text-blue-950">
 
               Drag & Drop Files
 
             </h2>
 
-            <p className="text-slate-600 text-xl mt-6">
+            <p className="text-slate-600 mt-3">
 
               or click below to browse files
 
@@ -257,27 +383,18 @@ const UploadDataset = () => {
             </p>
 
 
-            {/* Browse Button */}
-
-            <div className="mt-12">
+            <div className="mt-6">
 
               <input
-
                 type="file"
-
                 accept=".csv,.xlsx"
-
                 onChange={handleFileChange}
-
                 className="hidden"
-
                 id="datasetUpload"
               />
 
               <label
-
                 htmlFor="datasetUpload"
-
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-5 rounded-2xl text-xl font-semibold cursor-pointer shadow-xl hover:scale-105 transition duration-300"
               >
 
@@ -287,8 +404,6 @@ const UploadDataset = () => {
 
             </div>
 
-
-            {/* Selected File */}
 
             {
 
@@ -309,13 +424,12 @@ const UploadDataset = () => {
                   </p>
 
                 </div>
+
               )
             }
 
 
-            {/* Upload Button */}
-
-            <div className="mt-12">
+            <div className="mt-6">
 
               <button
 
@@ -333,14 +447,13 @@ const UploadDataset = () => {
                     ? "Uploading..."
 
                     : "Upload Dataset"
+
                 }
 
               </button>
 
             </div>
 
-
-            {/* Success */}
 
             {
 
@@ -351,11 +464,10 @@ const UploadDataset = () => {
                   {message}
 
                 </div>
+
               )
             }
 
-
-            {/* Error */}
 
             {
 
@@ -366,6 +478,7 @@ const UploadDataset = () => {
                   {error}
 
                 </div>
+
               )
             }
 
@@ -374,15 +487,12 @@ const UploadDataset = () => {
         </div>
 
 
-        {/* Uploaded Datasets */}
+        {/* DATASET TABLE */}
 
         <div className="bg-white/80 backdrop-blur-lg rounded-[40px] shadow-2xl p-10">
 
 
-          {/* Header */}
-
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
-
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
 
             <div>
 
@@ -394,21 +504,17 @@ const UploadDataset = () => {
 
               <p className="text-slate-600 mt-3">
 
-                Search and manage uploaded datasets.
+                Search and manage uploaded datasets
 
               </p>
 
             </div>
 
 
-            {/* Search */}
-
-            <div className="relative w-full md:w-[400px]">
+            <div className="relative w-full lg:w-[400px]">
 
               <Search
-
                 className="absolute left-4 top-4 text-slate-400"
-
                 size={22}
               />
 
@@ -435,95 +541,383 @@ const UploadDataset = () => {
           </div>
 
 
-          {/* Dataset Grid */}
+          <div className="overflow-x-auto rounded-3xl border border-slate-200">
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <table className="w-full">
 
+              <thead>
 
-            {
+                <tr className="bg-slate-100 text-left">
 
-              datasets
+                  <th className="px-6 py-5 text-blue-950 font-bold">
 
-                .filter((dataset) =>
+                    Dataset ID
 
-                  dataset.name
-                    .toLowerCase()
+                  </th>
 
-                    .includes(
+                  <th className="px-6 py-5 text-blue-950 font-bold">
 
-                      searchTerm
+                    Dataset Name
+
+                  </th>
+
+                  <th className="px-6 py-5 text-blue-950 font-bold">
+
+                    Actions
+
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {
+
+                  datasets
+
+                    .filter((dataset) =>
+
+                      dataset.name
+
                         .toLowerCase()
+
+                        .includes(
+
+                          searchTerm
+                            .toLowerCase()
+
+                        )
                     )
+
+                    .map((dataset) => (
+
+                      <tr
+                        key={dataset.id}
+                        className="border-t border-slate-200 hover:bg-slate-50"
+                      >
+
+                        <td className="px-6 py-5">
+
+                          #{dataset.id}
+
+                        </td>
+
+                        <td className="px-6 py-5 font-medium">
+
+                          {dataset.name}
+
+                        </td>
+
+                        <td className="px-6 py-5">
+
+                          <button
+
+                            onClick={() =>
+
+                              setSelectedDataset(
+                                dataset.id
+                              )
+                            }
+
+                            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition"
+                          >
+
+                            <Plus size={16} />
+
+                            Create Version
+
+                          </button>
+
+                        </td>
+
+                      </tr>
+
+                    ))
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+                {/* DATASET VERSIONING */}
+
+        <div className="bg-white/80 backdrop-blur-lg rounded-[40px] shadow-2xl p-10">
+
+          <div className="flex items-center gap-4 mb-8">
+
+            <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-4 rounded-2xl">
+
+              <History
+                className="text-white"
+                size={28}
+              />
+
+            </div>
+
+            <div>
+
+              <h2 className="text-4xl font-bold text-blue-950">
+
+                Dataset Versioning
+
+              </h2>
+
+              <p className="text-slate-600 mt-2">
+
+                Manage dataset versions and track upload history
+
+              </p>
+
+            </div>
+
+          </div>
+
+
+          {/* CREATE VERSION */}
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+
+            <select
+
+              value={selectedDataset}
+
+              onChange={(e) =>
+
+                setSelectedDataset(
+                  e.target.value
                 )
+              }
 
-                .map((dataset) => (
+              className="px-5 py-4 rounded-2xl border border-slate-300 outline-none focus:ring-2 focus:ring-blue-500"
+            >
 
-                  <div
+              <option value="">
 
+                Select Dataset
+
+              </option>
+
+              {
+
+                datasets.map((dataset) => (
+
+                  <option
                     key={dataset.id}
-
-                    className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-3xl p-8 shadow-lg hover:scale-[1.02] transition duration-300 border border-white"
+                    value={dataset.id}
                   >
 
+                    {dataset.name}
 
-                    {/* Icon */}
+                  </option>
 
-                    <div className="bg-gradient-to-r from-blue-500 to-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg mb-6">
-
-                      <Database
-
-                        className="text-white"
-
-                        size={30}
-                      />
-
-                    </div>
-
-
-                    {/* Dataset Name */}
-
-                    <h3 className="text-2xl font-bold text-blue-950 break-words">
-
-                      {dataset.name}
-
-                    </h3>
-
-
-                    {/* Metadata */}
-
-                    <div className="mt-5 space-y-3">
-
-                      <p className="text-slate-700">
-
-                        <span className="font-semibold">
-
-                          Dataset ID:
-
-                        </span>
-
-                        {" "}
-                        {dataset.id}
-
-                      </p>
-
-                      <p className="text-slate-700 break-words">
-
-                        <span className="font-semibold">
-
-                          File Path:
-
-                        </span>
-
-                        {" "}
-                        {dataset.file_path}
-
-                      </p>
-
-                    </div>
-
-                  </div>
                 ))
-            }
+              }
+
+            </select>
+
+
+            <input
+
+              type="text"
+
+              placeholder="Version Name (Ex: v1.0)"
+
+              value={versionName}
+
+              onChange={(e) =>
+
+                setVersionName(
+                  e.target.value
+                )
+              }
+
+              className="px-5 py-4 rounded-2xl border border-slate-300 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+
+            <button
+
+              onClick={handleCreateVersion}
+
+              disabled={creatingVersion}
+
+              className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 rounded-2xl font-semibold hover:scale-105 transition duration-300"
+            >
+
+              {
+
+                creatingVersion
+
+                  ? "Creating..."
+
+                  : "Create Version"
+
+              }
+
+            </button>
+
+          </div>
+
+
+          {/* VERSION HISTORY TABLE */}
+
+          <div className="overflow-x-auto rounded-3xl border border-slate-200">
+
+            <table className="w-full">
+
+              <thead>
+
+                <tr className="bg-slate-100 text-left">
+
+                  <th className="px-6 py-5 font-bold text-blue-950">
+
+                    Version ID
+
+                  </th>
+
+                  <th className="px-6 py-5 font-bold text-blue-950">
+
+                    Dataset ID
+
+                  </th>
+
+                  <th className="px-6 py-5 font-bold text-blue-950">
+
+                    Version Name
+
+                  </th>
+
+                  <th className="px-6 py-5 font-bold text-blue-950">
+
+                    Status
+
+                  </th>
+
+                  <th className="px-6 py-5 font-bold text-blue-950">
+
+                    Created At
+
+                  </th>
+
+                  <th className="px-6 py-5 font-bold text-blue-950">
+
+                    Action
+
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {
+
+                  versions.map((version) => (
+
+                    <tr
+
+                      key={version.id}
+
+                      className="border-t border-slate-200 hover:bg-slate-50"
+                    >
+
+                      <td className="px-6 py-5">
+
+                        #{version.id}
+
+                      </td>
+
+                      <td className="px-6 py-5">
+
+                        {version.dataset_id}
+
+                      </td>
+
+                      <td className="px-6 py-5 font-medium">
+
+                        {version.version_name}
+
+                      </td>
+
+                      <td className="px-6 py-5">
+
+                        <span
+
+                          className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                            version.status === "active"
+
+                              ? "bg-green-100 text-green-700"
+
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
+
+                          {version.status}
+
+                        </span>
+
+                      </td>
+
+                      <td className="px-6 py-5">
+
+                        {
+
+                          version.created_at
+
+                            ? new Date(
+                                version.created_at
+                              ).toLocaleDateString()
+
+                            : "-"
+                        }
+
+                      </td>
+
+                      <td className="px-6 py-5">
+
+                        {
+
+                          version.status === "active" && (
+
+                            <button
+
+                              onClick={() =>
+
+                                handleArchiveVersion(
+                                  version.id
+                                )
+                              }
+
+                              className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition"
+                            >
+
+                              <Archive size={16} />
+
+                              Archive
+
+                            </button>
+
+                          )
+                        }
+
+                      </td>
+
+                    </tr>
+
+                  ))
+                }
+
+              </tbody>
+
+            </table>
 
           </div>
 
@@ -532,7 +926,9 @@ const UploadDataset = () => {
       </div>
 
     </MainLayout>
+
   );
+
 };
 
 export default UploadDataset;
