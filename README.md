@@ -1,111 +1,189 @@
-# Advanced AI Demand Forecasting Project
+# Advanced AI Demand Forecasting Platform - Phase 6
 
 ## Project Overview
 
-The Advanced AI Demand Forecasting Project is an AI-powered web application developed to forecast future product demand using historical sales datasets which provides forecasting analytics and dashboards for business insights. 
+The Advanced AI Demand Forecasting Platform is an enterprise-grade forecasting and analytics solution designed to help organizations predict future demand, optimize inventory, improve business planning, and support strategic decision-making through Artificial Intelligence and Machine Learning.
 
-The project is developed using FastAPI for the backend and React.js with Tailwind CSS for the frontend.
-
----
-
-# Features
-
-## Authentication Module
-- User Registration
-- User Login
----
-
-## Dataset Upload Module
-- CSV Dataset Upload
-- Excel Dataset Upload
-- Dataset Validation
-- Data Cleaning
----
-
-## AI Forecasting Module
-- Dataset Preprocessing using Pandas
-- Forecasting using Linear Regression
-- Forecast APIs
+Phase 6 extends the platform with enterprise management, workflow automation, dashboard customization, KPI monitoring, data quality intelligence, and strategic planning capabilities.
 
 ---
 
-## Dashboard & Analytics
-- Analytics Dashboard
-- Forecast Prediction Charts
-- Top Selling Products Analytics
-- Interactive Graphs using Recharts
----
+## Key Features
 
-## Reports Module
-- Forecast Reports Page
-- Revenue Forecast Reports
-- Sales Forecast Reports
-- Export as PDF and Excel
----
+### Authentication & Security
 
-## Frontend Features
-- Responsive UI using Tailwind CSS
-- API Integration using Axios
----
+* JWT Authentication
+* Role-Based Access Control (RBAC)
+* Secure Login & Registration
+* Protected API Access
 
-# Tech Stack
+### Dataset Management
 
-## Backend
-- FastAPI
-- MySQL
-- SQLAlchemy
-- JWT Authentication
-- Pandas
-- Scikit-learn
-- ReportLab
-- OpenPyXL
+* CSV Dataset Upload
+* Dataset Validation
+* Missing Value Detection
+* Duplicate Record Detection
+* Dataset Monitoring
 
----
+### AI Forecasting Engine
 
-## Frontend
-- React.js
-- Tailwind CSS
-- Axios
-- Recharts
----
+* Prophet Forecasting Model
+* Linear Regression Model
+* Random Forest Model
+* Multi-Model Forecast Comparison
+* Forecast History Tracking
 
-# API Modules
+### Dashboard & Analytics
 
-## Authentication APIs
-- Register User
-- Login User
+* Executive Dashboard
+* Revenue Analytics
+* Region Analytics
+* Inventory Risk Analysis
+* Business Insights
+* Forecast Accuracy Monitoring
+* Dashboard Widget Management
 
-## Dataset APIs
-- Upload CSV Dataset
-- Upload Excel Dataset
+### Forecast Operations
 
-## Forecast APIs
-- Generate Forecast
-- Revenue Prediction
+* Forecast Workspace
+* Forecast Scheduler
+* Forecast Approval Workflow
+* Forecast Governance
+* Scenario Planning
 
-## Reports APIs
-- Download PDF Report
-- Download Excel Report
+### Reports & Notifications
 
----
+* PDF Report Generation
+* Excel Report Export
+* In-App Notifications
+* Email Delivery Tracking
 
-# Charts & Visualizations
+### Strategic Intelligence
 
-- Future Sales Prediction Chart
-- Revenue Forecast Chart
-- Top Selling Products Bar Graph
-- Forecast Analytics Dashboard
+* AI Insights
+* Strategic Planning
+* KPI Management
+* Data Quality Monitoring
+
+### Enterprise Management (Phase 6)
+
+* Organization Management
+* Project Management
+* Workflow Automation
+* Dashboard Widgets
+* Enterprise Configuration
 
 ---
 
-# Export Features
+## Phase 6 Enhancements
 
-## PDF Reports
-## Excel Reports
-- Revenue Forecast Summary
-- Top Products Analytics
-- Forecast Tables
+## Dashboard Widgets
+## Workflow Automation
+## Organization Management
+## Project Management
+## KPI Management
+## Data Quality Intelligence
+## Strategic Planning
+---
+
+## Technology Stack
+
+### Frontend
+
+* React.js
+* Tailwind CSS
+* Axios
+* Recharts
+* Lucide React
+
+### Backend
+
+* FastAPI
+* Python
+* SQLAlchemy
+* Pydantic
+* JWT Authentication
+
+### Database
+
+* SQLite / MySQL
+
+### Machine Learning
+
+* Prophet
+* Scikit-Learn
+* Pandas
+* NumPy
 
 ---
+
+## Project Architecture
+
+Frontend
+├── Authentication
+├── Executive Dashboard
+├── Forecasting Module
+├── Scenario Planning
+├── Forecast Workspace
+├── Forecast Scheduler
+├── Forecast Approval
+├── Forecast Governance
+├── Reports
+├── Notifications
+├── AI Insights
+├── Strategic Planning
+├── KPI Management
+├── Data Quality
+├── Dashboard Widgets
+├── Organizations
+├── Projects
+└── Workflow Automation
+
+Backend
+├── Authentication APIs
+├── Dataset APIs
+├── Forecast APIs
+├── Scheduler APIs
+├── Approval APIs
+├── Governance APIs
+├── Report APIs
+├── Notification APIs
+├── Widget APIs
+├── Organization APIs
+├── Project APIs
+├── Workflow APIs
+├── KPI APIs
+└── Data Quality APIs
+
+---
+
+## Installation
+
+### Backend
+
+```bash
+cd Backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+### Frontend
+
+```bash
+cd Frontend
+npm install
+npm run dev
+```
+
+---
+
+
+
+
+
+
+
+
+
 
 
